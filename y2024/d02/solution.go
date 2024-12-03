@@ -9,8 +9,16 @@ import (
 )
 
 func main() {
-	res := PartOne(os.Stdin)
-	fmt.Println(res)
+	arg := os.Args[1]
+	fmt.Println("Running part", arg)
+	switch arg {
+	case "1":
+		res := PartOne(os.Stdin)
+		fmt.Println(res)
+	case "2":
+		res := PartTwo(os.Stdin)
+		fmt.Println(res)
+	}
 }
 
 func PartOne(r io.Reader) int {
@@ -41,7 +49,9 @@ func PartTwo(r io.Reader) int {
 		}
 
 		for i := 0; i < len(line); i++ {
-			newLine := append(line[:i], line[i+1:]...) // Remove the i-th element
+			newLine := []int{}
+			newLine = append(newLine, line[:i]...)
+			newLine = append(newLine, line[i+1:]...) // Remove the i-th element
 			if isStrictM(newLine) && isValid(newLine) {
 				ans++
 				break // Stop further checks for this line

@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	res, err := PartOne(os.Stdin)
+	res, err := PartTwo(os.Stdin)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -43,6 +43,29 @@ func PartOne(r io.Reader) (int, error) {
 
 	distance := distanceBetweenLists(list1, list2)
 	return distance, nil
+}
+
+func calculateSum(list1, list2 []int) int {
+	counts := make(map[int]int)
+	for _, num := range list2 {
+		counts[num]++
+	}
+
+	sum := 0
+	for _, num := range list1 {
+		sum += num * counts[num]
+	}
+
+	return sum
+}
+
+func PartTwo(r io.Reader) (int, error) {
+	list1, list2, err := readLists(r)
+	if err != nil {
+		return 0, err
+	}
+	sum := calculateSum(list1, list2)
+	return sum, nil
 }
 
 func readLists(r io.Reader) ([]int, []int, error) {

@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+func Abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+
 // return list of lines
 func LinesFromReader(r io.Reader) ([]string, error) {
 	var lines []string

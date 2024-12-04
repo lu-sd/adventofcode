@@ -16,8 +16,8 @@ const input1 = `
 
 func TestPart1(t *testing.T) {
 	r := strings.NewReader(input1)
-	got := PartOne(r)
-	want := 2
+	got := Part1(r)
+	want := 0
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)
@@ -26,8 +26,8 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	r := strings.NewReader(input1)
-	got := PartTwo(r)
-	want := 4
+	got := Part2(r)
+	want := 0
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)

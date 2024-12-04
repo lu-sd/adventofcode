@@ -4,7 +4,6 @@ import (
 	"adventofcode/preprocess"
 	"fmt"
 	"io"
-	"math"
 	"os"
 )
 
@@ -28,38 +27,92 @@ func PartOne(r io.Reader) int {
 	}
 	var ans int
 	for _, line := range lines {
-		if isStrictM(line) && isValid(line) {
-			ans++
-		}
+		ans += isSafe(line)
 	}
 	return ans
 }
 
+//	func PartTwo(r io.Reader) int {
+//		lines, err := readLists(r)
+//		if err != nil {
+//			return 0
+//		}
+//
+//		ans, curAns := 0, 0
+//
+//		for _, line := range lines {
+//			curAns = isSafe(line)
+//			if curAns == 0 {
+//				for i := range line {
+//					newLine := []int{}
+//					newLine = append(newLine, line[:i]...)
+//					newLine = append(newLine, line[i+1:]...)
+//					curAns = isSafe(newLine)
+//					if curAns == 1 {
+//						break
+//					}
+//				}
+//			}
+//			ans += curAns
+//		}
+//
+//		return ans
+//	}
 func PartTwo(r io.Reader) int {
 	lines, err := readLists(r)
 	if err != nil {
 		return 0
 	}
 
-	var ans int
+	curAns, ans := 0, 0
 	for _, line := range lines {
-		if isStrictM(line) && isValid(line) {
-			ans++
-			continue
+		curAns = isSafe2(line)
+		if curAns == 0 {
+			curAns = isSafe(line[1:])
 		}
-
-		for i := 0; i < len(line); i++ {
-			newLine := []int{}
-			newLine = append(newLine, line[:i]...)
-			newLine = append(newLine, line[i+1:]...) // Remove the i-th element
-			if isStrictM(newLine) && isValid(newLine) {
-				ans++
-				break // Stop further checks for this line
-			}
-		}
+		ans += curAns
 	}
 
 	return ans
+}
+
+func inValid(a, b int) bool {
+	return a*b <= 0 || preprocess.Abs(b) > 3
+}
+
+func isSafe(l []int) int {
+	initDiff := l[1] - l[0]
+	for i := 1; i < len(l); i++ {
+		curDiff := l[i] - l[i-1]
+		if inValid(initDiff, curDiff) {
+			return 0
+		}
+	}
+	return 1
+}
+
+func isSafe2(l []int) int {
+	skip := 0
+	initDiff := l[1] - l[0]
+	for i := 1; i < len(l); i++ {
+		curDiff := l[i] - l[i-1]
+		if skip == 1 {
+			curDiff = l[i] - l[i-2]
+			skip++
+			if i == 2 {
+				initDiff = l[2] - l[0]
+			}
+		}
+		if inValid(initDiff, curDiff) {
+			if skip == 0 {
+				skip++
+				continue
+			} else {
+				return 0
+			}
+		}
+	}
+	return 1
 }
 
 func readLists(r io.Reader) ([][]int, error) {
@@ -68,40 +121,13 @@ func readLists(r io.Reader) ([][]int, error) {
 		return nil, fmt.Errorf("could not read input: %w", err)
 	}
 
-	var result [][]int
-	for _, line := range lines {
+	result := make([][]int, len(lines))
+	for i, line := range lines {
 		nums, err := preprocess.StrToInt(line)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, nums)
+		result[i] = nums
 	}
 	return result, nil
-}
-
-func isStrictM(l []int) bool {
-	if len(l) < 2 {
-		return true
-	}
-	inc := true
-	dec := true
-	for i := 1; i < len(l); i++ {
-		if l[i] > l[i-1] {
-			dec = false
-		}
-		if l[i] < l[i-1] {
-			inc = false
-		}
-	}
-	return inc || dec
-}
-
-func isValid(l []int) bool {
-	for i := 1; i < len(l); i++ {
-		diff := math.Abs(float64(l[i] - l[i-1]))
-		if diff < 1 || diff > 3 {
-			return false
-		}
-	}
-	return true
 }

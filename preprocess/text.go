@@ -22,11 +22,11 @@ func LinesFromReader(r io.Reader) ([]string, error) {
 	s := bufio.NewScanner(r)
 	s.Split(bufio.ScanLines)
 	for s.Scan() {
-		line := strings.TrimSpace(s.Text()) // Trim leading and trailing whitespace
-		if line == "" {                     // Skip empty lines
-			continue
-		}
-		lines = append(lines, line)
+		// line := strings.TrimSpace(s.Text()) // Trim leading and trailing whitespace
+		// if line == "" {                     // Skip empty lines
+		// 	continue
+		// }
+		lines = append(lines, s.Text())
 	}
 	if s.Err() != nil {
 		return nil, fmt.Errorf("failed to scan reader: %w", s.Err())

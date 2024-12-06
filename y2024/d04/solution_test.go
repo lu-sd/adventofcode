@@ -5,19 +5,22 @@ import (
 	"testing"
 )
 
-const input1 = `
-7 6 4 2 1
-1 2 7 8 9
-9 7 6 2 1
-1 3 2 4 5
-8 6 4 4 1
-1 3 6 7 9
+const input1 = `MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX
 `
 
 func TestPart1(t *testing.T) {
 	r := strings.NewReader(input1)
 	got := Part1(r)
-	want := 0
+	want := 18
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)
@@ -27,7 +30,7 @@ func TestPart1(t *testing.T) {
 func TestPart2(t *testing.T) {
 	r := strings.NewReader(input1)
 	got := Part2(r)
-	want := 0
+	want := 9
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)

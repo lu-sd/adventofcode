@@ -13,7 +13,7 @@ func TestPart1(t *testing.T) {
 	}
 
 	got, _ := Part1(testInput)
-	want := 41
+	want := 3749
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)
@@ -26,7 +26,7 @@ func TestPart2(t *testing.T) {
 		log.Fatalf("fail open test1.txt %v", err)
 	}
 	got, _ := Part2(testInput)
-	want := 6
+	want := 11387
 
 	if got != want {
 		t.Errorf("got %v want %v", got, want)

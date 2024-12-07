@@ -14,6 +14,8 @@ import (
 )
 
 var (
+	//go:embed templ/test1.txt
+	testInput string
 	//go:embed templ/solution.go
 	solutionTemplate string
 	//go:embed templ/solution_test.go
@@ -151,6 +153,9 @@ func (gen *Generator) WriteCode() error {
 	}
 	if err := gen.copyTemplatetoFile([]byte(solutionTestTemplate), "solution_test.go"); err != nil {
 		return fmt.Errorf("creating %q: %w", "solution_test.go", err)
+	}
+	if err := gen.copyTemplatetoFile([]byte(testInput), "test1.txt"); err != nil {
+		return fmt.Errorf("creating %q: %w", "test1.txt", err)
 	}
 	return nil
 }

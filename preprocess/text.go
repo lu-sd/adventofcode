@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"strconv"
-	"strings"
 )
 
 func Abs(a int) int {
@@ -35,15 +33,15 @@ func LinesFromReader(r io.Reader) ([]string, error) {
 	return lines, nil
 }
 
-func StrToInt(line string) ([]int, error) {
-	wordlist := strings.Fields(line)
-	ints := make([]int, len(wordlist))
-	for i, s := range wordlist {
-		val, err := strconv.Atoi(s)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse int %w", err)
-		}
-		ints[i] = val
-	}
-	return ints, nil
-}
+// func IntsFromString(line string) ([]int, error) {
+// 	wordlist := strings.Fields(line)
+// 	ints := make([]int, len(wordlist))
+// 	for i, s := range wordlist {
+// 		val, err := strconv.Atoi(s)
+// 		if err != nil {
+// 			return nil, fmt.Errorf("failed to parse int %w", err)
+// 		}
+// 		ints[i] = val
+// 	}
+// 	return ints, nil
+// }

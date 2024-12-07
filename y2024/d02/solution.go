@@ -123,9 +123,9 @@ func readLists(r io.Reader) ([][]int, error) {
 
 	result := make([][]int, len(lines))
 	for i, line := range lines {
-		nums, err := preprocess.StrToInt(line)
-		if err != nil {
-			return nil, err
+		nums := preprocess.IntsFromstring(line)
+		if nums == nil {
+			return nil, fmt.Errorf("no number found %v", err)
 		}
 		result[i] = nums
 	}

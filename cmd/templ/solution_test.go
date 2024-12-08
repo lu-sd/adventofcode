@@ -15,7 +15,7 @@ func TestPart1(t *testing.T) {
 	want := 0
 
 	t.Run(fmt.Sprintf("want: %d", want), func(t *testing.T) {
-		got := Part1(testInput)
+		got := part1(testInput)
 
 		if got != want {
 			t.Errorf("got %v want %v", got, want)
@@ -31,7 +31,7 @@ func TestPart2(t *testing.T) {
 	want := 0
 
 	t.Run(fmt.Sprintf("want: %d", want), func(t *testing.T) {
-		got := Part2(testInput)
+		got := part2(testInput)
 
 		if got != want {
 			t.Errorf("got %v want %v", got, want)

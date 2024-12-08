@@ -31,13 +31,13 @@ func buildSolution(r io.Reader) solution {
 	return solution{}
 }
 
-func Part1(r io.Reader) int {
+func part1(r io.Reader) int {
 	solution := buildSolution(r)
 	solution.run1()
 	return solution.res()
 }
 
-func Part2(r io.Reader) int {
+func part2(r io.Reader) int {
 	solution := buildSolution(r)
 	solution.run2()
 	return solution.res()
@@ -48,8 +48,8 @@ func main() {
 	fmt.Println("Running part", arg)
 	switch arg {
 	case "1":
-		fmt.Println("p1 res 🙆-> ", Part1(os.Stdin))
+		fmt.Println("p1 res 🙆-> ", part1(os.Stdin))
 	case "2":
-		fmt.Println("p2 res 🙆-> ", Part2(os.Stdin))
+		fmt.Println("p2 res 🙆-> ", part2(os.Stdin))
 	}
 }

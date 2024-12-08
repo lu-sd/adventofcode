@@ -1,4 +1,4 @@
-package preprocess
+package utils
 
 // IntsFromString returns a slice of integers in str, where these numbers are
 // separated by non-number runes. If a dash preceding a number is the only
@@ -45,6 +45,7 @@ func IntsFromString(str string) (intSlice []int) {
 			wordBuf = wordBuf[:0] // reuse underlying array
 			n, sign = 0, 1
 		}
+		sign = 1
 	}
 
 	if len(wordBuf) > 0 {

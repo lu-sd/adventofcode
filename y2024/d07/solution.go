@@ -1,7 +1,7 @@
 package main
 
 import (
-	"adventofcode/preprocess"
+	"adventofcode/utils"
 	"fmt"
 	"io"
 	"os"
@@ -34,7 +34,7 @@ func Part1(r io.Reader) (int, error) {
 	}
 	ans := 0
 	for _, line := range lines {
-		intslice := preprocess.IntsFromString(line)
+		intslice := utils.IntsFromString(line)
 		if isvalid(intslice, ops) {
 			ans += intslice[0]
 		}
@@ -99,7 +99,7 @@ func Part2(r io.Reader) (int, error) {
 	}
 	ans := 0
 	for _, line := range lines {
-		intslice := preprocess.IntsFromString(line)
+		intslice := utils.IntsFromString(line)
 		if isvalid(intslice, ops2) {
 			ans += intslice[0]
 		}
@@ -108,7 +108,7 @@ func Part2(r io.Reader) (int, error) {
 }
 
 func readLists(r io.Reader) ([]string, error) {
-	lines, err := preprocess.LinesFromReader(r)
+	lines, err := utils.LinesFromReader(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read input: %w", err)
 	}

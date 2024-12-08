@@ -1,7 +1,7 @@
 package main
 
 import (
-	"adventofcode/preprocess"
+	"adventofcode/utils"
 	"fmt"
 	"io"
 	"os"
@@ -28,7 +28,7 @@ func main() {
 }
 
 func readLists(r io.Reader) ([]string, error) {
-	lines, err := preprocess.LinesFromReader(r)
+	lines, err := utils.LinesFromReader(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read input: %w", err)
 	}
@@ -49,7 +49,7 @@ func buildAjacAndManuals(r io.Reader) (ajacList, []manual, error) {
 	depences, manuals := make(ajacList), make([]manual, 0)
 	processAjac := true
 	for _, line := range lines {
-		nums := preprocess.IntsFromString(line)
+		nums := utils.IntsFromString(line)
 		if len(nums) == 0 {
 			processAjac = false
 			continue

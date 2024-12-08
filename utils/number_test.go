@@ -1,4 +1,4 @@
-package preprocess
+package utils
 
 import (
 	"reflect"
@@ -33,6 +33,10 @@ func TestSplitStringIntoIntStrings(t *testing.T) {
 		{
 			str:  "---",
 			want: nil,
+		},
+		{
+			str:  "- 1 -1 2",
+			want: []int{1, -1, 2},
 		},
 		{
 			str:  "-000",

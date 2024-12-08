@@ -1,7 +1,7 @@
 package main
 
 import (
-	"adventofcode/preprocess"
+	"adventofcode/utils"
 	"fmt"
 	"io"
 )
@@ -98,7 +98,7 @@ func (e equation) isSolvable(operators []operator) bool {
 }
 
 func equationFromString(s string) (equation, error) {
-	numbers := preprocess.IntsFromString(s)
+	numbers := utils.IntsFromString(s)
 	if len(numbers) < 2 {
 		return equation{}, fmt.Errorf("invalid equation: %q", s)
 	}
@@ -110,7 +110,7 @@ func equationFromString(s string) (equation, error) {
 }
 
 func equationsFromReader(r io.Reader) ([]equation, error) {
-	lines, err := preprocess.LinesFromReader(r)
+	lines, err := utils.LinesFromReader(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read input: %w", err)
 	}

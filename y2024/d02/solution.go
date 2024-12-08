@@ -1,7 +1,7 @@
 package main
 
 import (
-	"adventofcode/preprocess"
+	"adventofcode/utils"
 	"fmt"
 	"io"
 	"os"
@@ -77,7 +77,7 @@ func PartTwo(r io.Reader) int {
 }
 
 func inValid(a, b int) bool {
-	return a*b <= 0 || preprocess.Abs(b) > 3
+	return a*b <= 0 || utils.Abs(b) > 3
 }
 
 func isSafe(l []int) int {
@@ -116,14 +116,14 @@ func isSafe2(l []int) int {
 }
 
 func readLists(r io.Reader) ([][]int, error) {
-	lines, err := preprocess.LinesFromReader(r)
+	lines, err := utils.LinesFromReader(r)
 	if err != nil {
 		return nil, fmt.Errorf("could not read input: %w", err)
 	}
 
 	result := make([][]int, len(lines))
 	for i, line := range lines {
-		nums := preprocess.IntsFromString(line)
+		nums := utils.IntsFromString(line)
 		if nums == nil {
 			return nil, fmt.Errorf("no number found %v", err)
 		}

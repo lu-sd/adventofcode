@@ -34,7 +34,7 @@ func Part1(r io.Reader) (int, error) {
 	}
 	ans := 0
 	for _, line := range lines {
-		intslice := preprocess.IntsFromstring(line)
+		intslice := preprocess.IntsFromString(line)
 		if isvalid(intslice, ops) {
 			ans += intslice[0]
 		}
@@ -65,12 +65,20 @@ func isvalid(intslice []int, ops []func(int, int) int) bool {
 
 	var dfs func(int, int, []int) bool
 	dfs = func(level, curTotal int, input []int) bool {
-		if curTotal == target && level == len(input) {
-			return true
+		// if curTotal == target && level == len(input) {
+		// 	return true
+		// }
+		// if curTotal > target || level > len(input)-1 {
+		// 	return false
+		// }
+
+		if level == len(input) {
+			return curTotal == target
 		}
-		if curTotal > target || level > len(input)-1 {
+		if curTotal > target {
 			return false
 		}
+
 		for _, operator := range ops {
 			if dfs(level+1, operator(curTotal, input[level]), input) {
 				return true
@@ -91,7 +99,7 @@ func Part2(r io.Reader) (int, error) {
 	}
 	ans := 0
 	for _, line := range lines {
-		intslice := preprocess.IntsFromstring(line)
+		intslice := preprocess.IntsFromString(line)
 		if isvalid(intslice, ops2) {
 			ans += intslice[0]
 		}

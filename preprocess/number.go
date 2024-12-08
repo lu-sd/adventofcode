@@ -21,7 +21,7 @@ package preprocess
 // 	return ints
 // }
 
-func IntsFromstring(str string) (intSlice []int) {
+func IntsFromString(str string) (intSlice []int) {
 	wordBuf := make([]rune, 0, len(str))
 
 	n, sign := 0, 1

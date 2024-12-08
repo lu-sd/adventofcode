@@ -123,7 +123,7 @@ func readLists(r io.Reader) ([][]int, error) {
 
 	result := make([][]int, len(lines))
 	for i, line := range lines {
-		nums := preprocess.IntsFromstring(line)
+		nums := preprocess.IntsFromString(line)
 		if nums == nil {
 			return nil, fmt.Errorf("no number found %v", err)
 		}

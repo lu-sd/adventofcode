@@ -50,7 +50,7 @@ func TestSplitStringIntoIntStrings(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.str, func(t *testing.T) {
-			got := IntsFromstring(tc.str)
+			got := IntsFromString(tc.str)
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Errorf("got %v want %v", got, tc.want)
 			}

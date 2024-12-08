@@ -4,52 +4,52 @@ import (
 	"adventofcode/utils"
 	"fmt"
 	"io"
+	"log"
 	"os"
 )
+
+type solution struct {
+	ans int
+}
+
+func (s *solution) run1() {
+}
+
+func (s *solution) run2() {
+}
+
+func (s *solution) res() int {
+	return 0
+}
+
+func buildSolution(r io.Reader) solution {
+	lines, err := utils.LinesFromReader(r)
+	if err != nil {
+		log.Fatalf("could not read input: %v %v", lines, err)
+	}
+
+	return solution{}
+}
+
+func Part1(r io.Reader) int {
+	solution := buildSolution(r)
+	solution.run1()
+	return solution.res()
+}
+
+func Part2(r io.Reader) int {
+	solution := buildSolution(r)
+	solution.run2()
+	return solution.res()
+}
 
 func main() {
 	arg := os.Args[1]
 	fmt.Println("Running part", arg)
 	switch arg {
 	case "1":
-		res, err := Part1(os.Stdin)
-		if err != nil {
-			fmt.Println("p1 error ", err)
-		}
-		fmt.Println("p1 res 🙆-> ", res)
+		fmt.Println("p1 res 🙆-> ", Part1(os.Stdin))
 	case "2":
-		res, err := Part2(os.Stdin)
-		if err != nil {
-			fmt.Println("p2 error ", err)
-		}
-		fmt.Println("p2 res 🙆-> ", res)
+		fmt.Println("p2 res 🙆-> ", Part2(os.Stdin))
 	}
-}
-
-func Part1(r io.Reader) (int, error) {
-	lines, err := readLists(r)
-	if err != nil {
-		fmt.Println(lines)
-		return 0, fmt.Errorf("error %w", err)
-	}
-
-	return 0, nil
-}
-
-func Part2(r io.Reader) (int, error) {
-	lines, err := readLists(r)
-	if err != nil {
-		fmt.Println(lines)
-		return 0, fmt.Errorf("error %w", err)
-	}
-	return 0, nil
-}
-
-func readLists(r io.Reader) ([]string, error) {
-	lines, err := utils.LinesFromReader(r)
-	if err != nil {
-		return nil, fmt.Errorf("could not read input: %w", err)
-	}
-
-	return lines, err
 }

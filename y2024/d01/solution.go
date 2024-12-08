@@ -4,105 +4,76 @@ import (
 	"adventofcode/utils"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"slices"
-	"strconv"
-	"strings"
 )
 
-func main() {
-	res, err := PartTwo(os.Stdin)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(res)
+type solution struct {
+	l1  []int
+	l2  []int
+	ans int
 }
 
-func abs(a int) int {
-	if a < 0 {
-		return -a
+func (s *solution) run1() {
+	slices.Sort(s.l1)
+	slices.Sort(s.l2)
+	for i := range s.l1 {
+		s.ans += utils.Abs(s.l1[i] - s.l2[i])
 	}
-	return a
 }
 
-func distanceBetweenLists(a, b []int) int {
-	var distance int
-	for i := range a {
-		distance += abs(a[i] - b[i])
-	}
-	return distance
-}
-
-func PartOne(r io.Reader) (int, error) {
-	list1, list2, err := readLists(r)
-	if err != nil {
-		return 0, err
-	}
-	slices.Sort(list1)
-	slices.Sort(list2)
-
-	distance := distanceBetweenLists(list1, list2)
-	return distance, nil
-}
-
-func calculateSum(list1, list2 []int) int {
+func (s *solution) run2() {
 	counts := make(map[int]int)
-	for _, num := range list2 {
+	for _, num := range s.l1 {
 		counts[num]++
 	}
 
-	sum := 0
-	for _, num := range list1 {
-		sum += num * counts[num]
+	for _, num := range s.l2 {
+		s.ans += num * counts[num]
 	}
-
-	return sum
 }
 
-func PartTwo(r io.Reader) (int, error) {
-	list1, list2, err := readLists(r)
-	if err != nil {
-		return 0, err
-	}
-	sum := calculateSum(list1, list2)
-	return sum, nil
+func (s *solution) res() int {
+	return s.ans
 }
 
-func readLists(r io.Reader) ([]int, []int, error) {
+func buildSolution(r io.Reader) solution {
 	lines, err := utils.LinesFromReader(r)
 	if err != nil {
-		return nil, nil, fmt.Errorf("could not read input: %w", err)
+		log.Fatalf("could not read input: %v %v", lines, err)
 	}
-
 	var (
-		col1 = make([]int, len(lines))
-		col2 = make([]int, len(lines))
+		l1 = make([]int, len(lines))
+		l2 = make([]int, len(lines))
 	)
-
 	for i, line := range lines {
-		n1, n2, err := LinesTo2Int(line)
-		if err != nil {
-			return nil, nil, err
-		}
-		col1[i] = n1
-		col2[i] = n2
+		ints := utils.IntsFromString(line)
+		l1[i], l2[i] = ints[0], ints[1]
 	}
 
-	return col1, col2, nil
+	return solution{l1, l2, 0}
 }
 
-func LinesTo2Int(line string) (int, int, error) {
-	nums := strings.Fields(line)
-	res := []int{}
-	for _, v := range nums {
-		num, err := strconv.Atoi(v)
-		if err == nil {
-			res = append(res, num)
-		}
-	}
-	if len(res) == 2 {
-		return res[0], res[1], nil
-	}
+func Part1(r io.Reader) int {
+	solution := buildSolution(r)
+	solution.run1()
+	return solution.res()
+}
 
-	return 0, 0, fmt.Errorf("ParseInt error")
+func Part2(r io.Reader) int {
+	solution := buildSolution(r)
+	solution.run2()
+	return solution.res()
+}
+
+func main() {
+	arg := os.Args[1]
+	fmt.Println("Running part", arg)
+	switch arg {
+	case "1":
+		fmt.Println("p1 res 🙆-> ", Part1(os.Stdin))
+	case "2":
+		fmt.Println("p2 res 🙆-> ", Part2(os.Stdin))
+	}
 }

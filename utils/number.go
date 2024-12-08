@@ -4,22 +4,29 @@ package utils
 // separated by non-number runes. If a dash preceding a number is the only
 // non-number rune between two numbers, it is considered a separator; otherwise,
 // it is considered part of the number, which is consequently negative.
-// func IntsFromString(str string) []int {
-// 	words := splitStringIntoIntStrings(str)
 //
-// 	ints := make([]int, len(words))
+//	func IntsFromString(str string) []int {
+//		words := splitStringIntoIntStrings(str)
 //
-// 	for i, w := range words {
-// 		n, err := strconv.Atoi(w)
-// 		if err != nil {
-// 			panic(fmt.Sprintf("could not parse int %q: %v", w, err))
-// 		}
+//		ints := make([]int, len(words))
 //
-// 		ints[i] = n
-// 	}
+//		for i, w := range words {
+//			n, err := strconv.Atoi(w)
+//			if err != nil {
+//				panic(fmt.Sprintf("could not parse int %q: %v", w, err))
+//			}
 //
-// 	return ints
-// }
+//			ints[i] = n
+//		}
+//
+//		return ints
+//	}
+func Abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
 
 func IntsFromString(str string) (intSlice []int) {
 	wordBuf := make([]rune, 0, len(str))

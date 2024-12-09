@@ -19,28 +19,30 @@ func (s *solution) run2() {
 }
 
 func (s *solution) res() int {
-	return 0
+	return s.ans
 }
 
-func buildSolution(r io.Reader) solution {
+func buildSolution(r io.Reader) *solution {
 	lines, err := utils.LinesFromReader(r)
 	if err != nil {
 		log.Fatalf("could not read input: %v %v", lines, err)
 	}
 
-	return solution{}
+	return &solution{
+		ans: 0,
+	}
 }
 
 func part1(r io.Reader) int {
-	solution := buildSolution(r)
-	solution.run1()
-	return solution.res()
+	s := buildSolution(r)
+	s.run1()
+	return s.res()
 }
 
 func part2(r io.Reader) int {
-	solution := buildSolution(r)
-	solution.run2()
-	return solution.res()
+	s := buildSolution(r)
+	s.run2()
+	return s.res()
 }
 
 func main() {

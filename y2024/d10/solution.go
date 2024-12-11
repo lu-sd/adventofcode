@@ -7,119 +7,83 @@ import (
 	"log"
 	"os"
 )
-const a = "fdaf"
 
 type solution struct {
-	grid         []string
-	nrow, ncol   int
-	seen         [][]bool
-	ans          int
-	dirs         []utils.Pt
-	trailHeader  map[utils.Pt]map[utils.Pt]bool
-	trailHeader2 map[utils.Pt]map[utils.Pt]int
+	nrow, ncol  int
+	grid        []string
+	seen        map[utils.Pt]bool
+	ans         int
+	trailHeader map[string]bool
 }
-
 
 func (s *solution) isInside(pt utils.Pt) bool {
 	return pt.X >= 0 && pt.X < s.nrow && pt.Y >= 0 && pt.Y < s.ncol
 }
 
-func (s *solution) isSeen(pt utils.Pt) bool {
-	return s.seen[pt.X][pt.Y]
-}
-
-func (s *solution) pByte(pt utils.Pt) byte {
-	return s.grid[pt.X][pt.Y]
+func (s *solution) found(sp, cp utils.Pt) {
+	id := fmt.Sprintf("%d,%d,%d,%d", sp.X, sp.Y, cp.X, cp.Y)
+	s.trailHeader[id] = true
 }
 
 func (s *solution) pInt(pt utils.Pt) int {
-	return int(s.pByte(pt) - '0')
+	return int(s.grid[pt.X][pt.Y] - '0')
+}
+
+func (s *solution) dfs1(startP, curP utils.Pt, target int) {
+	if !s.isInside(curP) || s.seen[curP] || s.pInt(curP) != target {
+		return
+	}
+	if target == 9 {
+		s.found(startP, curP)
+		return
+	}
+	s.seen[curP] = true
+	for _, dir := range utils.Dir4 {
+		s.dfs1(startP, curP.Move(dir.X, dir.Y), target+1)
+	}
+	s.seen[curP] = false
 }
 
 func (s *solution) run1() {
-	var dfs func(s, c utils.Pt, h int)
-
-	dfs = func(sp, cp utils.Pt, preHeight int) {
-		if s.isSeen(cp) || s.pInt(cp)-preHeight != 1 {
-			return
-		}
-		// fmt.Println(sp, cp, "reach ")
-		if s.pInt(cp) == 9 {
-			if s.trailHeader[sp] == nil {
-				s.trailHeader[sp] = map[utils.Pt]bool{}
-			}
-			s.trailHeader[sp][cp] = true
-		}
-		for _, dir := range s.dirs {
-			nxP := cp.Move(dir.X, dir.Y)
-			if !s.isInside(nxP) {
-				continue
-			}
-			s.seen[cp.X][cp.Y] = true
-			dfs(sp, nxP, s.pInt(cp))
-			s.seen[cp.X][cp.Y] = false
-		}
-	}
-
 	for i, line := range s.grid {
 		for j, r := range line {
 			if r == '0' {
 				cp := utils.Pt{X: i, Y: j}
-				dfs(cp, cp, -1)
+				s.dfs1(cp, cp, 0)
 			}
 		}
+	}
+}
+
+func (s *solution) dfs2(startP, curP utils.Pt, target int) {
+	if !s.isInside(curP) || s.seen[curP] || s.pInt(curP) != target {
+		return
+	}
+	if s.pInt(curP) == 9 {
+		s.ans++
+		return
+	}
+	for _, dir := range utils.Dir4 {
+		nxP := curP.Move(dir.X, dir.Y)
+		s.seen[curP] = true
+		s.dfs2(startP, nxP, target+1)
+		s.seen[curP] = false
 	}
 }
 
 func (s *solution) run2() {
-	var dfs func(s, c utils.Pt, h int)
-
-	dfs = func(sp, cp utils.Pt, preHeight int) {
-		if s.isSeen(cp) || s.pInt(cp)-preHeight != 1 {
-			return
-		}
-		// fmt.Println(sp, cp, "reach ")
-		if s.pInt(cp) == 9 {
-			if s.trailHeader2[sp] == nil {
-				s.trailHeader2[sp] = map[utils.Pt]int{}
-			}
-			s.trailHeader2[sp][cp]++
-		}
-		for _, dir := range s.dirs {
-			nxP := cp.Move(dir.X, dir.Y)
-			if !s.isInside(nxP) {
-				continue
-			}
-			s.seen[cp.X][cp.Y] = true
-			dfs(sp, nxP, s.pInt(cp))
-			s.seen[cp.X][cp.Y] = false
-		}
-	}
-
 	for i, line := range s.grid {
 		for j, r := range line {
 			if r == '0' {
 				cp := utils.Pt{X: i, Y: j}
-				dfs(cp, cp, -1)
+				s.dfs2(cp, cp, 0)
 			}
 		}
 	}
 }
 
 func (s *solution) res() int {
-	for _, v := range s.trailHeader {
-		s.ans += len(v)
-	}
-	return s.ans
-}
-
-func (s *solution) res2() int {
-	for _, v := range s.trailHeader2 {
-		for _, v := range v {
-			s.ans += v
-		}
-	}
-	return s.ans
+	return len(s.trailHeader)
 }
 
 func buildSolution(r io.Reader) *solution {
@@ -132,21 +96,13 @@ func buildSolution(r io.Reader) *solution {
 	for i := range nr {
 		seen[i] = make([]bool, nc)
 	}
-	dirs := []utils.Pt{
-		{X: -1, Y: 0},
-		{X: 1, Y: 0},
-		{X: 0, Y: 1},
-		{X: 0, Y: -1},
-	}
 
 	return &solution{
-		nrow:         nr,
-		ncol:         nc,
-		seen:         seen,
-		dirs:         dirs,
-		grid:         lines,
-		trailHeader:  make(map[utils.Pt]map[utils.Pt]bool),
-		trailHeader2: make(map[utils.Pt]map[utils.Pt]int),
+		nrow:        nr,
+		ncol:        nc,
+		seen:        make(map[utils.Pt]bool),
+		grid:        lines,
+		trailHeader: make(map[string]bool),
 	}
 }
 
@@ -159,7 +115,7 @@ func part1(r io.Reader) int {
 func part2(r io.Reader) int {
 	s := buildSolution(r)
 	s.run2()
-	return s.res2()
+	return s.ans
 }
 
 func main() {

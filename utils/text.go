@@ -2,10 +2,18 @@ package utils
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 )
 
+func ByteSFromReader(r io.Reader) ([]byte, error) {
+	line, err := io.ReadAll(r)
+	if err != nil {
+		return nil, fmt.Errorf("error %w", err)
+	}
+	return bytes.TrimSpace(line), nil
+}
 
 // return list of lines
 func LinesFromReader(r io.Reader) ([]string, error) {

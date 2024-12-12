@@ -22,12 +22,10 @@ func (s *solution) run1() {
 	for i, line := range s.Array {
 		for j, flower := range line {
 			cur := utils.Pt{X: i, Y: j}
-			header := headPt(cur)
 			if s.seen[cur] {
 				continue
 			}
-			// fmt.Printf("start flower %c, position %v \n", flower, header)
-			s.dfs1(cur, flower, header)
+			s.dfs1(cur, flower, headPt(cur))
 		}
 	}
 }

@@ -20,3 +20,24 @@ var Dir4 = []Pt{
 	{X: 0, Y: 1},
 	{X: 0, Y: -1},
 }
+
+type Grid struct {
+	NRow, NCol int
+	Array      []string
+}
+
+func (g *Grid) IsInside(pt Pt) bool {
+	return pt.X >= 0 && pt.X < g.NRow && pt.Y >= 0 && pt.Y < g.NCol
+}
+
+func (g *Grid) PByte(pt Pt) byte {
+	return g.Array[pt.X][pt.Y]
+}
+
+func (g *Grid) PInt(pt Pt) int {
+	return int(g.PByte(pt) - '0')
+}
+
+func (g *Grid) PRune(pt Pt) rune {
+	return rune(g.PByte(pt))
+}

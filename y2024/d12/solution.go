@@ -11,8 +11,9 @@ import (
 type (
 	headPt   utils.Pt
 	solution struct {
-		ans   int
-		lands map[headPt]map[utils.Pt]rune
+		ans int
+		// lands map[headPt]map[utils.Pt]rune
+		lands map[headPt][]utils.Pt
 		seen  map[utils.Pt]bool
 		utils.Grid
 	}
@@ -31,9 +32,10 @@ func (s *solution) run1() {
 }
 
 func (s *solution) res() int {
-	for _, land := range s.lands {
+	for header, land := range s.lands {
 		area, perimeter := len(land), 0
-		for pt, flower := range land {
+		flower := s.PRune(utils.Pt(header))
+		for _, pt := range land {
 			for _, dir := range utils.Dir4 {
 				nexPt := pt.Move(dir.X, dir.Y)
 				if !s.IsInside(nexPt) || s.PRune(nexPt) != flower {
@@ -46,15 +48,52 @@ func (s *solution) res() int {
 	return s.ans
 }
 
+func (s *solution) res2() int {
+	for header, land := range s.lands {
+		area, sides := len(land), 0
+		flower := s.PRune(utils.Pt(header))
+		for _, pt := range land {
+			boolSlice := make([]bool, 4)
+			// check whether neigher direc with same bool
+			for i, dir := range utils.Dir4 {
+				nexPt := pt.Move(dir.X, dir.Y)
+				if !s.IsInside(nexPt) || s.PRune(nexPt) != flower {
+					boolSlice[i] = true
+				}
+			}
+			for i, v := range boolSlice {
+				next := (i + 1) % 4
+				// out conner
+				if v && boolSlice[next] {
+					sides++
+				}
+				// for insider conner
+				if !v && !boolSlice[next] {
+					pt1, pt2 := utils.Dir4[i], utils.Dir4[next]
+					anglePt := pt.Move(pt1.X+pt2.X, pt1.Y+pt2.Y)
+					if s.PRune(anglePt) != flower {
+						sides++
+					}
+				}
+			}
+
+		}
+		// fmt.Printf("flower %c area %d slides %d \n", flower, area, sides)
+		s.ans += area * sides
+	}
+	return s.ans
+}
+
 func (s *solution) dfs1(curP utils.Pt, flower rune, header headPt) {
 	if !s.IsInside(curP) || s.PRune(curP) != flower || s.seen[curP] {
 		return
 	}
 	s.seen[curP] = true
-	if s.lands[header] == nil {
-		s.lands[header] = map[utils.Pt]rune{}
-	}
-	s.lands[header][curP] = flower
+	// if s.lands[header] == nil {
+	// 	s.lands[header] = map[utils.Pt]rune{}
+	// }
+
+	s.lands[header] = append(s.lands[header], curP)
 	for _, dir := range utils.Dir4 {
 		nextP := curP.Move(dir.X, dir.Y)
 		s.dfs1(nextP, flower, header)
@@ -74,7 +113,7 @@ func buildSolution(r io.Reader) *solution {
 	return &solution{
 		ans:   0,
 		seen:  map[utils.Pt]bool{},
-		lands: map[headPt]map[utils.Pt]rune{},
+		lands: map[headPt][]utils.Pt{},
 		Grid: utils.Grid{
 			NRow:  nrow,
 			NCol:  ncol,
@@ -91,8 +130,8 @@ func part1(r io.Reader) int {
 
 func part2(r io.Reader) int {
 	s := buildSolution(r)
-	s.run2()
-	return s.res()
+	s.run1()
+	return s.res2()
 }
 
 func main() {

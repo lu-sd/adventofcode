@@ -15,10 +15,10 @@ func (p Pt) Dist(p2 Pt) (dx, dy int) {
 }
 
 var Dir4 = []Pt{
-	{X: -1, Y: 0},
-	{X: 1, Y: 0},
 	{X: 0, Y: 1},
+	{X: -1, Y: 0},
 	{X: 0, Y: -1},
+	{X: 1, Y: 0},
 }
 
 type Grid struct {

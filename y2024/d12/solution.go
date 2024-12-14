@@ -62,21 +62,20 @@ func (s *solution) res2() int {
 				}
 			}
 			for i, v := range boolSlice {
-				next := (i + 1) % 4
-				// out conner
-				if v && boolSlice[next] {
+				neighb := (i + 1) % 4
+				// out conner, both neighb directioin can not go
+				if v && boolSlice[neighb] {
 					sides++
 				}
-				// for insider conner
-				if !v && !boolSlice[next] {
-					pt1, pt2 := utils.Dir4[i], utils.Dir4[next]
+				// for insider conner, both can go
+				if !v && !boolSlice[neighb] {
+					pt1, pt2 := utils.Dir4[i], utils.Dir4[neighb]
 					anglePt := pt.Move(pt1.X+pt2.X, pt1.Y+pt2.Y)
 					if s.PRune(anglePt) != flower {
 						sides++
 					}
 				}
 			}
-
 		}
 		// fmt.Printf("flower %c area %d slides %d \n", flower, area, sides)
 		s.ans += area * sides

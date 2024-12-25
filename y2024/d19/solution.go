@@ -11,17 +11,17 @@ import (
 
 type solution struct {
 	ans         int
-	patternList map[string]struct{}
-	design      []string
+	patternList map[string]bool
+	designs     []string
 }
 
-func (s *solution) dfs(start int, w string) bool {
-	if start == len(w) {
+func (s *solution) dfs(start int, design string) bool {
+	if start == len(design) {
 		return true
 	}
-	for i := start; i < len(w); i++ {
-		prefix := w[start : i+1]
-		if _, ok := s.patternList[prefix]; ok && s.dfs(i+1, w) {
+	for i := start; i < len(design); i++ {
+		prefix := design[start : i+1]
+		if s.patternList[prefix] && s.dfs(i+1, design) {
 			return true
 		}
 	}
@@ -29,8 +29,10 @@ func (s *solution) dfs(start int, w string) bool {
 }
 
 func (s *solution) run1() {
-	for _, word := range s.design {
-		if s.dfs(0, word) {
+	fmt.Printf("%#v \n", s)
+	// fmt.Println(s)
+	for _, design := range s.designs {
+		if s.dfs(0, design) {
 			s.ans++
 		}
 	}
@@ -48,14 +50,14 @@ func buildSolution(r io.Reader) *solution {
 	if err != nil {
 		log.Fatalf("could not read input: %v %v", lines, err)
 	}
-	pattern := strings.Split(lines[0], ",")
-	patternList := make(map[string]struct{})
+	pattern := strings.Split(lines[0], ", ")
+	patternList := make(map[string]bool)
 	for _, w := range pattern {
-		patternList[w] = struct{}{}
+		patternList[w] = true
 	}
 	design := []string{}
 	for i, line := range lines {
-		if i < 1 {
+		if i <= 1 {
 			continue
 		}
 		design = append(design, line)
@@ -64,7 +66,7 @@ func buildSolution(r io.Reader) *solution {
 	return &solution{
 		ans:         0,
 		patternList: patternList,
-		design:      design,
+		designs:     design,
 	}
 }
 

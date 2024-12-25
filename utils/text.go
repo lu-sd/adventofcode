@@ -28,6 +28,9 @@ func LinesFromReader(r io.Reader) ([]string, error) {
 		// }
 		lines = append(lines, s.Text())
 	}
+	if seeker, ok := r.(io.Seeker); ok {
+		seeker.Seek(0, 0)
+	}
 	if s.Err() != nil {
 		return nil, fmt.Errorf("failed to scan reader: %w", s.Err())
 	}

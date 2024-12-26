@@ -24,13 +24,13 @@ const (
 
 func (s *solution) run1() {
 	for i := range s.robots {
-		s.robots[i].p.X = (s.robots[i].p.X + s.robots[i].v.X*seconds) % width
-		s.robots[i].p.Y = (s.robots[i].p.Y + s.robots[i].v.Y*seconds) % height
-		if s.robots[i].p.X < 0 {
-			s.robots[i].p.X += width
+		s.robots[i].p.C = (s.robots[i].p.C + s.robots[i].v.C*seconds) % width
+		s.robots[i].p.R = (s.robots[i].p.R + s.robots[i].v.R*seconds) % height
+		if s.robots[i].p.C < 0 {
+			s.robots[i].p.C += width
 		}
-		if s.robots[i].p.Y < 0 {
-			s.robots[i].p.Y += height
+		if s.robots[i].p.R < 0 {
+			s.robots[i].p.R += height
 		}
 	}
 }
@@ -41,13 +41,13 @@ func (s *solution) run2() {
 func (s *solution) res() int {
 	quadrants := [4]int{}
 	for _, r := range s.robots {
-		if r.p.X < width/2 && r.p.Y < height/2 {
+		if r.p.C < width/2 && r.p.R < height/2 {
 			quadrants[0]++
-		} else if r.p.X < width/2 && r.p.Y > height/2 {
+		} else if r.p.C < width/2 && r.p.R > height/2 {
 			quadrants[1]++
-		} else if r.p.X > width/2 && r.p.Y > height/2 {
+		} else if r.p.C > width/2 && r.p.R > height/2 {
 			quadrants[2]++
-		} else if r.p.X > width/2 && r.p.Y < height/2 {
+		} else if r.p.C > width/2 && r.p.R < height/2 {
 			quadrants[3]++
 		}
 	}
@@ -69,8 +69,8 @@ func buildSolution(r io.Reader) *solution {
 	for _, line := range lines {
 		ints := utils.IntsFromString(line)
 		rb := robot{
-			utils.Pt{X: ints[0], Y: ints[1]},
-			utils.Pt{X: ints[2], Y: ints[3]},
+			utils.Pt{C: ints[0], R: ints[1]},
+			utils.Pt{C: ints[2], R: ints[3]},
 		}
 		robots = append(robots, rb)
 	}

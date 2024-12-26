@@ -1,43 +1,85 @@
 package utils
 
 type Pt struct {
-	X, Y int
+	C, R int
 }
 
-func (p Pt) Move(dx, dy int) Pt {
-	return Pt{p.X + dx, p.Y + dy}
+func (p Pt) Move(dc, dr int) Pt {
+	return Pt{p.C + dc, p.R + dr}
 }
 
-func (p Pt) Dist(p2 Pt) (dx, dy int) {
-	dx = p.X - p2.X
-	dy = p.Y - p2.Y
-	return
+func (p Pt) PMove(p2 Pt) Pt {
+	return Pt{p.C + p2.C, p.R + p2.R}
+}
+
+func (p Pt) Dist(p2 Pt) (dc, dr int) {
+	dc = p.C - p2.C
+	dr = p.R - p2.R
+	return dc, dr
 }
 
 var Dir4 = []Pt{
-	{X: 0, Y: 1},
-	{X: -1, Y: 0},
-	{X: 0, Y: -1},
-	{X: 1, Y: 0},
+	{C: 0, R: 1},
+	{C: -1, R: 0},
+	{C: 0, R: -1},
+	{C: 1, R: 0},
 }
 
-type Grid struct {
-	NRow, NCol int
+type StringGrid struct {
+	NCol, NRow int
 	Array      []string
 }
 
-func (g *Grid) IsInside(pt Pt) bool {
-	return pt.X >= 0 && pt.X < g.NRow && pt.Y >= 0 && pt.Y < g.NCol
+func (g *StringGrid) IsInside(pt Pt) bool {
+	nrow, ncol := len(g.Array), len(g.Array[0])
+	return pt.C >= 0 && pt.C < ncol && pt.R >= 0 && pt.R < nrow
 }
 
-func (g *Grid) PByte(pt Pt) byte {
-	return g.Array[pt.X][pt.Y]
+func (g *StringGrid) GetByte(pt Pt) byte {
+	return g.Array[pt.R][pt.C]
 }
 
-func (g *Grid) PInt(pt Pt) int {
-	return int(g.PByte(pt) - '0')
+func (g *StringGrid) GetInt(pt Pt) int {
+	return int(g.GetByte(pt) - '0')
 }
 
-func (g *Grid) PRune(pt Pt) rune {
-	return rune(g.PByte(pt))
+func (g *StringGrid) GetRune(pt Pt) rune {
+	return rune(g.GetByte(pt))
 }
+
+type Grid[T comparable] struct {
+	NRow, NCol int
+	Array      [][]T
+}
+
+func (g *Grid[T]) IsInside(pt Pt) bool {
+	return pt.C >= 0 && pt.C < len(g.Array[0]) && pt.R >= 0 && pt.R < len(g.Array)
+}
+
+func (g *Grid[T]) Get(pt Pt) T {
+	return g.Array[pt.R][pt.C]
+}
+
+func (g *Grid[T]) Set(pt Pt, v T) {
+	g.Array[pt.R][pt.C] = v
+}
+
+func (g *Grid[T]) Swap(pt1, pt2 Pt) {
+	g.Array[pt2.R][pt2.C], g.Array[pt1.R][pt1.C] = g.Array[pt1.R][pt1.C], g.Array[pt2.R][pt2.C]
+}
+
+func (g *Grid[T]) Find(start, dir Pt, target, ban T) (result Pt, find bool) {
+	step := 1
+	for {
+		result = start.Move(dir.C*step, dir.R*step)
+		if !g.IsInside(result) || g.Get(result) == ban {
+			return result, false
+		}
+		if g.Get(result) == target {
+			return result, true
+		}
+		step++
+	}
+}
+
+type Seen map[Pt]bool

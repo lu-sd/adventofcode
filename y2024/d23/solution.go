@@ -113,9 +113,11 @@ func buildSolution(r io.Reader) *solution {
 			from, to := fromTo[i], fromTo[1-i]
 			edges := connects[from]
 			if edges == nil {
-				edges = map[string]bool{}
-				connects[from] = edges
+				// edges = map[string]bool{}
+				// connects[from] = edges
+				connects[from] = map[string]bool{}
 			}
+			// edges[to] = true
 			connects[from][to] = true
 			nodes[from] = struct{}{}
 			nodes[to] = struct{}{}

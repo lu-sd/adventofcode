@@ -1,5 +1,5 @@
 import { parseArgs } from "@std/cli/parse-args";
-import { init, run, test, getCurrentDayAndYear } from "./lib/cli.ts";
+import { getCurrentDayAndYear, init, run, test } from "./lib/cli.ts";
 const flags = parseArgs(Deno.args, {
   string: ["d", "day", "y", "year"],
   boolean: ["h", "help"],
@@ -22,12 +22,9 @@ async function main() {
     case "test":
       await test({ day, year });
       break;
-    // return await solve(year, day, part);
-    // return await init(year, day);
     case "run":
       await run({ day, year });
       break;
-    // return await solve(year, day, part);
     default:
       return printUsage();
   }
@@ -35,10 +32,11 @@ async function main() {
 
 function printUsage() {
   console.log("Usage:");
+  console.log("    deno task init [-d, --day <day>] [-y, --year <year>]");
+  console.log("    deno task test [-d, --day <day>] [-y, --year <year>]");
   console.log(
-    "    deno run solve [-d, --day <day>] [-p, --part <1 | 2>] [-y, --year <year>]"
+    "    deno task run [-d, --day <day>]  [-y, --year <year>]",
   );
-  console.log("    deno run init [-d, --day <day>] [-y, --year <year>]");
 }
 
 if (import.meta.main) {

@@ -42,9 +42,6 @@ export async function test(date: Day) {
   if (stderr.length) console.error(new TextDecoder().decode(stderr).trim());
 }
 
-const AOC_SESSION = Deno.env.get("AOC_SESSION") ?? "";
-const BASE_URL = "https://adventofcode.com";
-
 export async function init(date: Day) {
   const { solve, input, testInput, test, id } = templPaths(date);
   ensureDirSync(`solution/${id}`);
@@ -63,6 +60,9 @@ export async function init(date: Day) {
   }
   console.log("AOC ", date, "init!");
 }
+
+const AOC_SESSION = Deno.env.get("AOC_SESSION") ?? "";
+const BASE_URL = "https://adventofcode.com";
 
 async function fetchInput({ year, day }: Day, path: string) {
   if (!AOC_SESSION) throw new Error("AOC_SESSION is not set");

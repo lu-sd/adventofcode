@@ -3,13 +3,14 @@ import { dirname, join } from "@std/path";
 import { solution } from "./solve.ts";
 
 const __dirname = dirname(import.meta.url);
+console.log(import.meta.url);
 const filePath = new URL(join(__dirname, "test1.txt"));
 
 Deno.test("part-1", () => {
   const input = Deno.readTextFileSync(filePath).trim();
   const s1 = new solution(input);
   s1.part1();
-  assertEquals(s1.res(), 0);
+  assertEquals(s1.res(), 3);
 });
 
 Deno.test("part-2", () => {

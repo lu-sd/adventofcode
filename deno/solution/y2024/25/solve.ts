@@ -61,7 +61,7 @@ export class solution {
         if (!res.has(hint)) {
           res.set(hint, []);
         }
-        res.get(hint)!.push([...height]);
+        res.get(hint)!.push(height);
         hint = "0";
         grid.length = 0; // reset
         continue;
@@ -70,7 +70,7 @@ export class solution {
     }
 
     const height = this.getHeights(grid);
-    res.get(hint)!.push([...height]);
+    res.get(hint)!.push(height);
     return res;
   }
 

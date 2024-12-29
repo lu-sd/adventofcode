@@ -6,51 +6,13 @@ import (
 	"io"
 	"log"
 	"os"
-	"strconv"
 )
 
 type solution struct {
-	nums []int
-	ans  int
-	memo map[string]int
-}
-
-func (s *solution) blink(stone int) (newStones []int) {
-	if stone == 0 {
-		newStones = append(newStones, 1)
-	} else if len(strconv.Itoa(stone))%2 == 0 {
-		numStr := strconv.Itoa(stone)
-		half := len(numStr) / 2
-		left, _ := strconv.Atoi(numStr[:half])
-		right, _ := strconv.Atoi(numStr[half:])
-		newStones = append(newStones, left, right)
-	} else {
-		newStones = append(newStones, stone*2024)
-	}
-	return newStones
-}
-
-func (s *solution) dfs(stone, level, target int) int {
-	if level == target {
-		return 1
-	}
-	id := fmt.Sprintf("%d,%d", stone, level)
-	if v, ok := s.memo[id]; ok {
-		return v
-	}
-	newStones := s.blink(stone)
-	ans := 0
-	for _, v := range newStones {
-		ans += s.dfs(v, level+1, target)
-	}
-	s.memo[id] = ans
-	return ans
+	ans int
 }
 
 func (s *solution) run1() {
-	for _, v := range s.nums {
-		s.ans += s.dfs(v, 0, 75)
-	}
 }
 
 func (s *solution) run2() {
@@ -65,12 +27,9 @@ func buildSolution(r io.Reader) *solution {
 	if err != nil {
 		log.Fatalf("could not read input: %v %v", lines, err)
 	}
-	nums := utils.IntsFromString(lines[0])
 
 	return &solution{
-		nums: nums,
-		memo: map[string]int{},
-		ans:  0,
+		ans: 0,
 	}
 }
 

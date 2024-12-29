@@ -33,12 +33,14 @@ export class solution {
     const res = new Array(ncol).fill(0);
     for (let c = 0; c < ncol; c++) {
       let count = -1;
+
       for (let r = 0; r < nrow; r++) {
         const char = grid[r][c];
         if (char === "#") {
           count++;
         }
       }
+
       res[c] = count;
     }
     return res;
@@ -50,22 +52,28 @@ export class solution {
 
     const grid: string[] = [];
     for (const line of lines) {
-      if (hint == "0" && line[0] == "#") {
-        hint = "#";
+      // if (hint == "0" && line[0] == "#") {
+      //   hint = "#";
+      // }
+      // if (hint == "0" && line[0] == ".") {
+      //   hint = ".";
+      // }
+      if (hint == "0") {
+        hint = line[0];
       }
-      if (hint == "0" && line[0] == ".") {
-        hint = ".";
-      }
+
       if (line.length == 0) {
         const height = this.getHeights(grid);
         if (!res.has(hint)) {
           res.set(hint, []);
         }
         res.get(hint)!.push(height);
+        // reset everything
         hint = "0";
-        grid.length = 0; // reset
+        grid.length = 0;
         continue;
       }
+
       grid.push(line);
     }
 

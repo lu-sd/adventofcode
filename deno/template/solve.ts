@@ -9,10 +9,8 @@ export class solution {
     this.input = input;
     this.lines = input.split("\n");
   }
-  part1() {
-  }
-  part2() {
-  }
+  part1() {}
+  part2() {}
   res(): number {
     return this.ans;
   }

@@ -1,10 +1,10 @@
 import { dirname, join } from "@std/path";
 
 export class solve {
-  input: string;
+  lines: string[];
   ans: number;
   constructor(input: string, ans = 0) {
-    this.input = input;
+    this.lines = input.split("\n");
     this.ans = ans;
   }
 
@@ -30,14 +30,32 @@ export class solve {
       this.ans += n1 * (col2Freq.get(n1) || 0);
     }
   }
-  part1() {
-    const lines = this.input.split("\n");
-    const twoCols = this.buildCols(lines);
+
+  sortCols(lists: number[][]): number {
+    let res = 0;
+    const [col1, col2] = lists;
+    col1.sort((a, b) => a - b);
+    col2.sort((a, b) => a - b);
+    for (let idx = 0; idx < col1.length; idx++) {
+      const value = Math.abs(col1[idx] - col2[idx]);
+      res += value;
+    }
+    return res;
+  }
+  part2() {
+    const twoCols = this.buildCols(this.lines);
     this.findMatch(twoCols);
   }
-  part2() {}
+  part1() {
+    const twoCols = this.buildCols(this.lines);
+    const res = this.sortCols(twoCols);
+    return res;
+  }
   res() {
     return this.ans;
+  }
+  res1() {
+    return this.part1();
   }
 }
 
@@ -47,7 +65,7 @@ export default function run() {
   const input = Deno.readTextFileSync(filePath).trim();
   const s1 = new solve(input);
   s1.part1();
-  console.log("Part1 result ->", s1.res());
+  console.log("Part1 result ->", s1.res1());
   const s2 = new solve(input);
   s2.part2();
   console.log("Part2 result ->", s2.res());

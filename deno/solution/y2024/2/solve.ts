@@ -52,14 +52,15 @@ export class solve {
       } else {
         //skip atmost one item
         for (let skip = 0; skip < report.length; skip++) {
-          const newReport: number[] = [];
-          for (let i = 0; i < report.length; i++) {
-            if (i == skip) {
-              continue;
-            }
-            const item = report[i];
-            newReport.push(item);
-          }
+          // const newReport: number[] = [];
+          // for (let i = 0; i < report.length; i++) {
+          //   if (i == skip) {
+          //     continue;
+          //   }
+          //   const item = report[i];
+          //   newReport.push(item);
+          // }
+          const newReport = report.filter((_, idx) => idx != skip);
           if (this.isSafe(newReport)) {
             this.ans++;
             break;

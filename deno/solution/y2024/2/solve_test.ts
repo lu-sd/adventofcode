@@ -16,5 +16,5 @@ Deno.test("part-2", () => {
   const input = Deno.readTextFileSync(filePath).trim();
   const s2 = new solve(input);
   s2.part1();
-  assertEquals(s2.res(), 2);
+  assertEquals(s2.res(), 4);
 });

@@ -1,48 +1,97 @@
 package main
 
 import (
-	"adventofcode/utils"
 	"fmt"
 	"io"
-	"log"
 	"os"
 )
 
 type solution struct {
-	ans int
+	lines []byte
 }
 
-func (s *solution) run1() {
+func (s *solution) mul() int {
+	res := 0
+	line := string(s.lines)
+	for i := 0; i < len(line)-4; i++ {
+		if line[i:i+4] != "mul(" {
+			continue
+		}
+		i += 4
+		n1 := s.getNum(&i, line)
+		if line[i] != ',' {
+			continue
+		}
+		i++
+		n2 := s.getNum(&i, line)
+		if line[i] != ')' {
+			continue
+		}
+		res += n1 * n2
+	}
+	return res
 }
 
-func (s *solution) run2() {
+func (s *solution) mul2() int {
+	line := string(s.lines)
+	res := 0
+	enable := true
+	for i := 0; i < len(line)-7; i++ {
+		if line[i:i+7] == "don't()" {
+			enable = false
+		}
+		if line[i:i+4] == "do()" {
+			enable = true
+		}
+		if line[i:i+4] == "mul(" {
+			i += 4
+			n1 := s.getNum(&i, line)
+			if line[i] != ',' {
+				continue
+			}
+			i++
+			n2 := s.getNum(&i, line)
+			if line[i] != ')' {
+				continue
+			}
+			if enable {
+				res += n1 * n2
+			}
+		}
+	}
+	return res
 }
 
-func (s *solution) res() int {
-	return s.ans
+func (s *solution) getNum(idx *int, line string) int {
+	num := 0
+	for *idx < len(line) && line[*idx] <= '9' && line[*idx] >= '0' {
+		num = num*10 + int(line[*idx]-'0')
+		*idx++
+	}
+	return num
 }
 
 func buildSolution(r io.Reader) *solution {
-	lines, err := utils.LinesFromReader(r)
+	lines, err := io.ReadAll(r)
 	if err != nil {
-		log.Fatalf("could not read input: %v %v", lines, err)
+		return nil
 	}
 
 	return &solution{
-		ans: 0,
+		lines: lines,
 	}
 }
 
 func part1(r io.Reader) int {
 	s := buildSolution(r)
-	s.run1()
-	return s.res()
+	res := s.mul()
+	return res
 }
 
 func part2(r io.Reader) int {
 	s := buildSolution(r)
-	s.run2()
-	return s.res()
+	res := s.mul2()
+	return res
 }
 
 func main() {

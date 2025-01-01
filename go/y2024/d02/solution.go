@@ -49,7 +49,7 @@ func (s *solution) run2() {
 					}
 					newNumL = append(newNumL, numL[i])
 				}
-				// newNumL := append(numL[:skip], numL[skip+1:]...) wrong
+				// newNumL := append(numL[:skip], numL[skip+1:]...) wrong wrong
 				if s.isSafe(newNumL) {
 					s.ans2++
 					break

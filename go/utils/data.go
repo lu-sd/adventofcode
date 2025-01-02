@@ -9,7 +9,7 @@ func (p Pt) Move(dc, dr int) Pt {
 }
 
 func (p Pt) PMove(p2 Pt) Pt {
-	return Pt{p.C + p2.C, p.R + p2.R}
+	return Pt{C: p.C + p2.C, R: p.R + p2.R}
 }
 
 func (p Pt) Dist(p2 Pt) (dc, dr int) {

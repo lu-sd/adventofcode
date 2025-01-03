@@ -55,9 +55,9 @@ func (s *solution) run2() int {
 	for r, line := range s.Array {
 		for c := range line {
 			if s.spotGrid[r][c] == 1 {
-				seen := map[string]bool{}
+				visited := map[string]bool{}
 				s.spotGrid[r][c] = -1
-				res += s.isInfinity(s.start, 0, seen)
+				res += s.isInfinity(s.start, 0, visited)
 				s.spotGrid[r][c] = 1
 
 			}

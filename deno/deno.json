@@ -7,7 +7,7 @@
     "@std/path": "jsr:@std/path@^1.0.8"
   },
   "tasks": {
-    "run": "deno -A main.ts run",
+    "run": "deno --v8-flags=--stack-size=16384 -A main.ts run",
     "test": "deno -A main.ts test",
     "init": "deno -A main.ts init"
   }

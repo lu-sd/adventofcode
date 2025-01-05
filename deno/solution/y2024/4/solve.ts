@@ -6,19 +6,20 @@ export class solution {
   lines: string[];
   ans = 0;
   grid: Grid<string>;
+  ans2 = 0;
 
   constructor(input: string) {
     this.input = input;
     this.lines = input.split("\n");
-    const array: string[][] = [];
-    for (const [r, line] of this.lines.entries()) {
-      array[r] = Array(line.length);
-      for (let c = 0; c < line.length; c++) {
-        const char = line[c];
-        array[r][c] = char;
-      }
-    }
-    // const array:string[][] = this.lines.map(line => [...line])
+    // const array: string[][] = [];
+    // for (const [r, line] of this.lines.entries()) {
+    //   array[r] = Array(line.length);
+    //   for (let c = 0; c < line.length; c++) {
+    //     const char = line[c];
+    //     array[r][c] = char;
+    //   }
+    // }
+    const array: string[][] = this.lines.map((line) => [...line]);
     this.grid = new Grid(array);
   }
   part1() {
@@ -32,7 +33,6 @@ export class solution {
         dirs8.push([x, y]);
       }
     }
-    console.log(dirs8);
     for (let r = 0; r < this.grid.nrow; r++) {
       for (let c = 0; c < this.grid.nclo; c++) {
         for (const dir of dirs8) {
@@ -55,9 +55,55 @@ export class solution {
       }
     }
   }
-  part2() {}
+  part2() {
+    const dirs = [
+      [[1, 1], [-1, -1]],
+      [[-1, 1], [1, -1]],
+    ];
+
+    const points = new Map([
+      ["M", 1],
+      ["S", 2],
+    ]);
+
+    for (let r = 0; r < this.grid.nrow; r++) {
+      for (let c = 0; c < this.grid.nclo; c++) {
+        const char = this.grid.getChar(r, c);
+        let valid = true;
+        if (char !== "A") {
+          continue;
+        }
+        for (const dir of dirs) {
+          let counter = 0;
+          for (const side of dir) {
+            const nr = r + side[0];
+            const nc = c + side[1];
+
+            if (!this.grid.isInside(nr, nc)) {
+              valid = false;
+              break;
+            }
+            const nChar = this.grid.getChar(nr, nc);
+            if (points.has(nChar)) {
+              counter += points.get(nChar)!;
+            }
+          }
+          if (counter !== 3) {
+            valid = false;
+            break;
+          }
+        }
+        if (valid) {
+          this.ans2++;
+        }
+      }
+    }
+  }
   res(): number {
     return this.ans;
+  }
+  res2(): number {
+    return this.ans2;
   }
 }
 
@@ -70,5 +116,5 @@ export default function run() {
   console.log("Part1 result ->", s1.res());
   const s2 = new solution(input);
   s2.part2();
-  console.log("Part2 result ->", s2.res());
+  console.log("Part2 result ->", s2.res2());
 }

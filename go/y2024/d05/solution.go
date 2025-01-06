@@ -65,7 +65,7 @@ func (s *solution) buildList(task []int) adj {
 	return nAdjList
 }
 
-func findIndegre(task []int, nAdjList adj) map[int]int {
+func findIndegre(nAdjList adj) map[int]int {
 	inDegree := make(map[int]int)
 	for _, dependcy := range nAdjList {
 		for _, num := range dependcy {
@@ -102,7 +102,7 @@ func (s *solution) resorted(m []int) int {
 	// buildList
 	nAdjList := s.buildList(m)
 	// findIndegre
-	indegree := findIndegre(m, nAdjList)
+	indegree := findIndegre(nAdjList)
 	// validList
 	res := validAdj(m, indegree, nAdjList)
 	return res

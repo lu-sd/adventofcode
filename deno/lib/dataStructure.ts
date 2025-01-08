@@ -3,6 +3,22 @@ export type Pt = {
   y: number;
 };
 
+export class Point {
+  x: number;
+  y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  dist(other: Point): [number, number] {
+    return [this.x - other.x, this.y - other.y];
+  }
+  get id() {
+    return `${this.x}:${this.y}`;
+  }
+}
 export class Grid<T> {
   grid: T[][];
   nrow: number;

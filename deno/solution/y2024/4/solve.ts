@@ -34,7 +34,7 @@ export class solution {
       }
     }
     for (let r = 0; r < this.grid.nrow; r++) {
-      for (let c = 0; c < this.grid.nclo; c++) {
+      for (let c = 0; c < this.grid.ncol; c++) {
         for (const dir of dirs8) {
           let valid = true;
           for (let i = 0; i < target.length; i++) {
@@ -42,7 +42,7 @@ export class solution {
             const nc = c + i * dir[1];
             if (
               !this.grid.isInside(nr, nc) ||
-              this.grid.getChar(nr, nc) !== target[i]
+              this.grid.getVal(nr, nc) !== target[i]
             ) {
               valid = false;
               break;
@@ -67,8 +67,8 @@ export class solution {
     ]);
 
     for (let r = 0; r < this.grid.nrow; r++) {
-      for (let c = 0; c < this.grid.nclo; c++) {
-        const char = this.grid.getChar(r, c);
+      for (let c = 0; c < this.grid.ncol; c++) {
+        const char = this.grid.getVal(r, c);
         let valid = true;
         if (char !== "A") {
           continue;
@@ -83,7 +83,7 @@ export class solution {
               valid = false;
               break;
             }
-            const nChar = this.grid.getChar(nr, nc);
+            const nChar = this.grid.getVal(nr, nc);
             if (points.has(nChar)) {
               counter += points.get(nChar)!;
             }

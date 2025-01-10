@@ -6,8 +6,9 @@ export class solution {
   lines: string[];
   ans = 0;
   grid: Grid<number>;
-  seen: Map<string, boolean>;
+  // seen: Map<string, boolean>;
   ansSet = new Set<string>();
+  seen = new Set<string>();
 
   constructor(input: string) {
     this.input = input;
@@ -21,7 +22,6 @@ export class solution {
       }
     }
     this.grid = new Grid(arr);
-    this.seen = new Map();
   }
   part1() {
     for (let i = 0; i < this.grid.nrow; i++) {
@@ -36,7 +36,7 @@ export class solution {
 
   dfs1(start: Point, curP: Point, target: number) {
     if (
-      !this.grid.isPInside(curP) || this.seen.get(curP.id) ||
+      !this.grid.isPInside(curP) || this.seen.has(curP.id) ||
       this.grid.getPVal(curP) !== target
     ) {
       return;
@@ -46,11 +46,11 @@ export class solution {
       this.find(start.id, curP.id);
       return;
     }
-    this.seen.set(curP.id, true);
+    this.seen.add(curP.id);
     for (const dir of Dirs4) {
       this.dfs1(start, curP.move(dir), target + 1);
     }
-    this.seen.set(curP.id, false);
+    this.seen.delete(curP.id);
   }
   find(a: string, b: string) {
     this.ansSet.add(a + b);
@@ -69,7 +69,7 @@ export class solution {
 
   dfs2(curP: Point, target: number) {
     if (
-      !this.grid.isPInside(curP) || this.seen.get(curP.id) ||
+      !this.grid.isPInside(curP) || this.seen.has(curP.id) ||
       this.grid.getPVal(curP) !== target
     ) {
       return;
@@ -79,11 +79,11 @@ export class solution {
       this.ans++;
       return;
     }
-    this.seen.set(curP.id, true);
+    this.seen.add(curP.id);
     for (const dir of Dirs4) {
       this.dfs2(curP.move(dir), target + 1);
     }
-    this.seen.set(curP.id, false);
+    this.seen.delete(curP.id);
   }
   res1(): number {
     return this.ansSet.size;

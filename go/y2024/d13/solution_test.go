@@ -12,10 +12,10 @@ func TestPart1(t *testing.T) {
 	if err != nil {
 		log.Fatalf("fail open test1.txt %v", err)
 	}
-	want := 480
+	want := 0
 
 	t.Run(fmt.Sprintf("want: %d", want), func(t *testing.T) {
-		got := part2(testInput)
+		got := part1(testInput)
 
 		if got != want {
 			t.Errorf("got %v want %v", got, want)

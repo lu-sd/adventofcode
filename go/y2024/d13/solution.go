@@ -10,6 +10,30 @@ import (
 )
 
 func (s *solution) run1() {
+	for _, m := range s.machines {
+		s.ans += s.lowest(m.a, m.b, m.target)
+	}
+}
+
+func (s *solution) lowest(a, b, target utils.Pt) int {
+	lowest, found := 0, false
+	for aNum := range s.limit {
+		for bNum := range s.limit {
+			if s.found(aNum, bNum, a, b, target) {
+				cur := aNum*3 + bNum
+				if !found {
+					lowest = cur
+				} else {
+					lowest = min(lowest, cur)
+				}
+			}
+		}
+	}
+	return lowest
+}
+
+func (s *solution) found(aNum, bNum int, a, b, target utils.Pt) bool {
+	return (aNum*a.C+bNum*b.C) == target.C && (aNum*a.R+bNum*b.R) == target.R
 }
 
 func (s *solution) run2() {
@@ -29,13 +53,33 @@ func buildSolution(r io.Reader) *solution {
 		log.Fatalf("could not read input: %v %v", lines, err)
 	}
 
+	machines := make([]machine, 0)
+	pt := [3]utils.Pt{}
+	for i, line := range lines {
+		nums := utils.IntsFromString(line)
+		if i%4 == 3 {
+			machines = append(machines, machine{pt[0], pt[1], pt[2]})
+			continue
+		}
+		pt[i%4].C = nums[0]
+		pt[i%4].R = nums[1]
+	}
+	machines = append(machines, machine{pt[0], pt[1], pt[2]})
+
 	return &solution{
-		ans: 0,
+		machines: machines,
+		limit:    100,
+		ans:      0,
 	}
 }
 
+type machine struct {
+	a, b, target utils.Pt
+}
 type solution struct {
-	ans int
+	ans      int
+	machines []machine
+	limit    int
 }
 
 func part1(r io.Reader) int {

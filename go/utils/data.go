@@ -1,7 +1,7 @@
 package utils
 
 type Pt struct {
-	C, R int
+	R, C int
 }
 
 func (p Pt) Move(dc, dr int) Pt {

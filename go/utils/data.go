@@ -5,7 +5,7 @@ type Pt struct {
 }
 
 func (p Pt) Move(dc, dr int) Pt {
-	return Pt{p.C + dc, p.R + dr}
+	return Pt{C: p.C + dc, R: p.R + dr}
 }
 
 func (p Pt) PMove(p2 Pt) Pt {

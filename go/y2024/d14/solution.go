@@ -10,14 +10,14 @@ import (
 )
 
 func (s *solution) run1() {
-	for _, r := range s.robots {
-		r.C = (r.C + r.vx*second) % ncol
-		r.R = (r.R + r.vy*second) % nrow
-		if r.C < 0 {
-			r.C += ncol
+	for i := range s.robots {
+		s.robots[i].C = (s.robots[i].C + s.robots[i].vx*second) % ncol
+		s.robots[i].R = (s.robots[i].R + s.robots[i].vy*second) % nrow
+		if s.robots[i].C < 0 {
+			s.robots[i].C += ncol
 		}
-		if r.R < 0 {
-			r.R += nrow
+		if s.robots[i].R < 0 {
+			s.robots[i].R += nrow
 		}
 	}
 }

@@ -10,6 +10,45 @@ import (
 )
 
 func (s *solution) run1() {
+	s.bfs(s.start, utils.Dir4[3])
+}
+
+func (s *solution) bfs(curP, dir utils.Pt) {
+	queue := []sp{}
+	queue = append(queue, sp{curP, dir, 0})
+	// queue = []sp{{curP,dir,0}}
+	s.Seen[curP] = true
+	for len(queue) > 0 {
+		sz := len(queue)
+		for sz > 0 {
+			top := queue[0]
+			queue = queue[1:]
+
+			if s.GetRune(top.pos) == 'E' {
+				if s.ans == 0 || top.score < s.ans {
+					s.ans = top.score
+				}
+			}
+
+			for _, dir := range utils.Dir4 {
+				nextP := top.pos.PMove(dir)
+				if s.GetRune(nextP) == '#' {
+					continue
+				}
+				turn := 0
+				if top.dir != dir {
+					turn = 1
+				}
+				nextS := top.score + 1 + 1000*turn
+				if !s.Seen[nextP] {
+					s.Seen[nextP] = true
+					queue = append(queue, sp{nextP, dir, nextS})
+				}
+
+			}
+			sz--
+		}
+	}
 }
 
 func (s *solution) run2() {
@@ -30,12 +69,27 @@ func buildSolution(r io.Reader) *solution {
 	}
 
 	return &solution{
-		ans: 0,
+		ans:   0,
+		start: utils.Pt{C: 1, R: len(lines) - 2},
+		StringGrid: utils.StringGrid{
+			NCol:  len(lines[0]),
+			NRow:  len(lines),
+			Array: lines,
+		},
+		Seen: utils.Seen{},
 	}
+}
+
+type sp struct {
+	pos, dir utils.Pt
+	score    int
 }
 
 type solution struct {
 	ans int
+	utils.StringGrid
+	utils.Seen
+	start utils.Pt
 }
 
 func part1(r io.Reader) int {

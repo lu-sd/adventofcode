@@ -17,7 +17,8 @@ func (s *solution) bfs(curP, dir utils.Pt) {
 	queue := []sp{}
 	queue = append(queue, sp{curP, dir, 0})
 	// queue = []sp{{curP,dir,0}}
-	s.Seen[curP] = true
+	// s.Seen[curP] = true
+	s.minScore[curP] = 0
 	for len(queue) > 0 {
 		sz := len(queue)
 		for sz > 0 {
@@ -40,8 +41,9 @@ func (s *solution) bfs(curP, dir utils.Pt) {
 					turn = 1
 				}
 				nextS := top.score + 1 + 1000*turn
-				if !s.Seen[nextP] {
-					s.Seen[nextP] = true
+				score, ok := s.minScore[nextP]
+				if !ok || nextS < score {
+					s.minScore[nextP] = nextS
 					queue = append(queue, sp{nextP, dir, nextS})
 				}
 
@@ -76,7 +78,7 @@ func buildSolution(r io.Reader) *solution {
 			NRow:  len(lines),
 			Array: lines,
 		},
-		Seen: utils.Seen{},
+		minScore: map[utils.Pt]int{},
 	}
 }
 
@@ -88,8 +90,8 @@ type sp struct {
 type solution struct {
 	ans int
 	utils.StringGrid
-	utils.Seen
-	start utils.Pt
+	minScore map[utils.Pt]int
+	start    utils.Pt
 }
 
 func part1(r io.Reader) int {

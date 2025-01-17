@@ -1,24 +1,28 @@
 export type Pt = {
-  x: number;
-  y: number;
+  r: number;
+  c: number;
 };
 export class Point {
-  x: number;
-  y: number;
+  r: number;
+  c: number;
 
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  constructor(r: number, c: number) {
+    this.r = r;
+    this.c = c;
   }
 
   dist(other: Point): [number, number] {
-    return [this.x - other.x, this.y - other.y];
+    return [this.r - other.r, this.c - other.c];
   }
   move(dir: Point) {
-    return new Point(this.x + dir.x, this.y + dir.y);
+    return new Point(this.r + dir.r, this.c + dir.c);
+  }
+
+  equals(other: Point): boolean {
+    return this.r === other.r && this.c === other.c;
   }
   get id() {
-    return `${this.x}:${this.y}`;
+    return `${this.r}:${this.c}`;
   }
 }
 
@@ -36,13 +40,13 @@ export class Grid<T> {
   }
 
   isPInside(p: Point): boolean {
-    return p.x < this.nrow && p.x >= 0 && p.y < this.ncol && p.y >= 0;
+    return p.r < this.nrow && p.r >= 0 && p.c < this.ncol && p.c >= 0;
   }
   getVal(r: number, c: number): T {
     return this.grid[r][c];
   }
   getPVal(p: Point): T {
-    return this.grid[p.x][p.y];
+    return this.grid[p.r][p.c];
   }
 
   getId(r: number, c: number): string {

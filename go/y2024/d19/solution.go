@@ -44,7 +44,33 @@ func (s *solution) dfs(start int, design string) bool {
 	return res
 }
 
+func (s *solution) dfs2(start int, design string) int {
+	if start == len(design) {
+		return 1
+	}
+	if val, ok := s.memo2[start]; ok {
+		return val
+	}
+	res := 0
+	for patternL := range s.itemLen {
+		end := start + patternL
+		if end > len(design) {
+			continue
+		}
+		curpart := design[start:end]
+		if s.patterns[curpart] {
+			res += s.dfs2(end, design)
+		}
+	}
+	s.memo2[start] = res
+	return res
+}
+
 func (s *solution) run2() {
+	for _, design := range s.desighs {
+		s.memo2 = make(map[int]int)
+		s.ans += s.dfs2(0, design)
+	}
 }
 
 func (s *solution) res1() int {
@@ -91,6 +117,7 @@ type solution struct {
 	desighs       []string
 	itemLen, memo map[int]bool
 	patterns      map[string]bool
+	memo2         map[int]int
 }
 
 func part1(r io.Reader) int {

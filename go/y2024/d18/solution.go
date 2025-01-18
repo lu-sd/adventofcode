@@ -95,9 +95,44 @@ func part1(r io.Reader) int {
 }
 
 func part2(r io.Reader) int {
-	s := buildSolution(r)
-	s.run2()
-	return s.res2()
+	lines, err := utils.LinesFromReader(r)
+	if err != nil {
+		log.Fatalf("could not read input: %v %v", lines, err)
+	}
+	nrow := 71
+	ncol := 71
+	for checked, res := range lines {
+		if checked <= 1023 {
+			continue
+		}
+
+		grid := make([][]bool, nrow)
+		for i := range nrow {
+			grid[i] = make([]bool, ncol)
+		}
+
+		for i, line := range lines {
+			nums := utils.IntsFromString(line)
+			grid[nums[1]][nums[0]] = true
+			if i == checked {
+				break
+			}
+		}
+		s := &solution{
+			ans: 0,
+			Grid: utils.Grid[bool]{
+				NRow:  nrow,
+				NCol:  ncol,
+				Array: grid,
+			},
+		}
+		s.run1()
+		if s.ans == 0 {
+			fmt.Println(checked, res)
+			break
+		}
+	}
+	return 0
 }
 
 func main() {

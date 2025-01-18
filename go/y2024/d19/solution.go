@@ -6,10 +6,42 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
 func (s *solution) run1() {
+	for _, design := range s.desighs {
+		s.memo = make(map[int]bool)
+		if s.dfs(0, design) {
+			s.ans++
+		}
+	}
+}
+
+func (s *solution) dfs(start int, design string) bool {
+	if start == len(design) {
+		return true
+	}
+	if val, ok := s.memo[start]; ok {
+		return val
+	}
+	res := false
+	for pattern := range s.patterns {
+		end := start + len(pattern)
+		if end > len(design) {
+			continue
+		}
+		curpart := design[start:end]
+		if s.patterns[curpart] {
+			res = s.dfs(end, design)
+			if res {
+				break
+			}
+		}
+	}
+	s.memo[start] = res
+	return res
 }
 
 func (s *solution) run2() {
@@ -29,13 +61,36 @@ func buildSolution(r io.Reader) *solution {
 		log.Fatalf("could not read input: %v %v", lines, err)
 	}
 
+	designs := []string{}
+	itemLen := map[int]bool{}
+	patterns := map[string]bool{}
+
+	for i, line := range lines {
+		if i == 0 {
+			p := strings.Split(line, ", ")
+			for _, v := range p {
+				itemLen[len(v)] = true
+				patterns[v] = true
+			}
+		}
+		if i == 1 {
+			continue
+		}
+		designs = append(designs, line)
+	}
 	return &solution{
-		ans: 0,
+		ans:      0,
+		desighs:  designs,
+		itemLen:  itemLen,
+		patterns: patterns,
 	}
 }
 
 type solution struct {
-	ans int
+	ans           int
+	desighs       []string
+	itemLen, memo map[int]bool
+	patterns      map[string]bool
 }
 
 func part1(r io.Reader) int {

@@ -13,10 +13,35 @@ import (
 func (s *solution) run1() {
 	for _, design := range s.desighs {
 		s.memo = make(map[int]bool)
-		if s.dfs(0, design) {
+		if s.dfs3(0, design) {
 			s.ans++
 		}
 	}
+}
+
+func (s *solution) dfs3(start int, design string) bool {
+	if start == len(design) {
+		return true
+	}
+	if val, ok := s.memo[start]; ok {
+		return val
+	}
+	res := false
+	for patternL := range s.itemLen {
+		end := start + patternL
+		if end > len(design) {
+			continue
+		}
+		curpart := design[start:end]
+		if s.patterns[curpart] {
+			res = s.dfs(end, design)
+			if res {
+				break
+			}
+		}
+	}
+	s.memo[start] = res
+	return res
 }
 
 func (s *solution) dfs(start int, design string) bool {

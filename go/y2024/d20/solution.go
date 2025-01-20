@@ -34,11 +34,11 @@ func (s *solution) walk(p utils.Pt) {
 	if s.GetRune(p) == '#' || s.Seen[p] || s.GetRune(p) == 'E' {
 		return
 	}
-	start, cheatEl, find := s.cheat(p)
+	cheatEl, find := s.findCheat(p)
 	if find {
-		for _, pt := range cheatEl {
+		for _, end := range cheatEl {
 			cheatS := 2
-			pathS := s.path[pt] - s.path[start]
+			pathS := s.path[end] - s.path[p]
 			s.saves[pathS-cheatS]++
 		}
 	}
@@ -50,7 +50,7 @@ func (s *solution) walk(p utils.Pt) {
 	s.Seen[p] = false
 }
 
-func (s *solution) cheat(p utils.Pt) (start utils.Pt, cheatEl []utils.Pt, find bool) {
+func (s *solution) findCheat(p utils.Pt) (cheatEl []utils.Pt, find bool) {
 	for _, dir := range utils.Dir4 {
 		cheat := p.Move(dir.C*2, dir.R*2)
 		if s.IsInside(cheat) && s.GetRune(cheat) != '#' && !s.Seen[cheat] {
@@ -58,12 +58,59 @@ func (s *solution) cheat(p utils.Pt) (start utils.Pt, cheatEl []utils.Pt, find b
 		}
 	}
 	if len(cheatEl) > 0 {
-		return p, cheatEl, true
+		return cheatEl, true
 	}
-	return p, nil, false
+	return nil, false
 }
 
 func (s *solution) run2() {
+	s.findPath(s.start, 0)
+	s.walk2(s.start)
+}
+
+func (s *solution) walk2(p utils.Pt) {
+	if s.GetRune(p) == '#' || s.GetRune(p) == 'E' || s.Seen[p] {
+		return
+	}
+	s.findCheat2(p)
+	s.Seen[p] = true
+	for _, dir := range utils.Dir4 {
+		nextP := p.PMove(dir)
+		s.walk2(nextP)
+	}
+	s.Seen[p] = false
+}
+
+func (s *solution) findCheat2(start utils.Pt) {
+	queue := []utils.Pt{start}
+	visited := map[utils.Pt]bool{}
+	visited[start] = true
+	step := 0
+	for len(queue) > 0 {
+		n := len(queue)
+		for n > 0 {
+			n--
+			p := queue[0]
+			queue = queue[1:]
+			if s.GetRune(p) != '#' && p != start {
+				dist := s.path[p] - s.path[start]
+				if save := dist - step; save >= 100 {
+					s.saves[save]++
+				}
+			}
+			for _, dir := range utils.Dir4 {
+				nextP := p.PMove(dir)
+				if s.IsInside(nextP) && !visited[nextP] {
+					visited[nextP] = true
+					queue = append(queue, nextP)
+				}
+			}
+		}
+		step++
+		if step > 20 {
+			break
+		}
+	}
 }
 
 func (s *solution) res1() int {
@@ -76,6 +123,9 @@ func (s *solution) res1() int {
 }
 
 func (s *solution) res2() int {
+	for _, num := range s.saves {
+		s.ans += num
+	}
 	return s.ans
 }
 
@@ -98,8 +148,6 @@ func buildSolution(r io.Reader) *solution {
 		start: start,
 		path:  map[utils.Pt]int{},
 		StringGrid: utils.StringGrid{
-			NCol:  len(lines[0]),
-			NRow:  len(lines),
 			Array: lines,
 		},
 		Seen:  utils.Seen{},

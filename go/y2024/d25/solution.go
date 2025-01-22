@@ -20,11 +20,9 @@ func (s *solution) run1() {
 }
 
 func (s *solution) isValid(key, lock []int) bool {
-	for _, k := range key {
-		for _, l := range lock {
-			if k+l > 5 {
-				return false
-			}
+	for i, k := range key {
+		if k+lock[i] > 5 {
+			return false
 		}
 	}
 	return true
@@ -76,8 +74,8 @@ func buildSolution(r io.Reader) *solution {
 
 		if len(line) == 0 {
 			pairs[hint] = append(pairs[hint], getHeight(grid))
-			grid.Array = []string{}
-			// grid.Array = grid.Array[:0]
+			// grid.Array = []string{}
+			grid.Array = grid.Array[:0]
 			hint = '0'
 			continue
 		}
@@ -85,7 +83,6 @@ func buildSolution(r io.Reader) *solution {
 
 	}
 	pairs[hint] = append(pairs[hint], getHeight(grid))
-	fmt.Println(pairs)
 
 	return &solution{
 		ans:   0,

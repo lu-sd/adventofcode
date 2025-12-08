@@ -25,7 +25,7 @@ export function templPaths({ year, day }: Day) {
 
 export async function run(date: Day) {
   const { solve, inputPath } = templPaths(date);
-  const { solution } = await import("." + solve) as {
+  const { solution } = (await import("." + solve)) as {
     solution: SolutionConstructor;
   };
   exec(solution, inputPath);
@@ -47,7 +47,7 @@ export async function test(date: Day) {
   // );
   const { test } = templPaths(date);
   const command = new Deno.Command(Deno.execPath(), {
-    args: ["test", "-R", test],
+    args: ["test", "-A", test],
   });
   const { stdout, stderr } = await command.output();
   console.log(new TextDecoder().decode(stdout).trim());
@@ -65,17 +65,14 @@ export async function init(date: Day) {
   } else {
     await fetchInput(date, inputPath);
   }
-  if (!(existsSync(solve))) {
+  if (!existsSync(solve)) {
     await Deno.copyFile("./template/solve.ts.txt", solve);
   }
-  if (!(existsSync(test))) {
+  if (!existsSync(test)) {
     await Deno.copyFile("./template/solve_test.ts", test);
   }
-  if (!(existsSync(testInput))) {
-    await Deno.copyFile(
-      "./template/test1.txt",
-      testInput,
-    );
+  if (!existsSync(testInput)) {
+    await Deno.copyFile("./template/test1.txt", testInput);
   }
   console.log("AOC ", date, "init!");
 }

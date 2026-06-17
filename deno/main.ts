@@ -8,7 +8,7 @@ const flags = parseArgs(Deno.args, {
 async function main() {
   const verb = flags._[0]?.toString()?.toLowerCase();
   const day = flags.d || flags.day || getCurrentDayAndYear().day;
-  const year = flags.y || flags.year || "2024" || getCurrentDayAndYear().year;
+  const year = flags.y || flags.year || "2022" || getCurrentDayAndYear().year;
   const help = flags.h || flags.help;
 
   if (help || +day < 1 || +day > 25) {
@@ -36,7 +36,7 @@ async function main() {
 function printUsage() {
   console.log("Usage:");
   console.log(
-    "    deno run solve [-d, --day <day>] [-p, --part <1 | 2>] [-y, --year <year>]",
+    "    deno run solve [-d, --day <day>] [-p, --part <1 | 2>] [-y, --year <year>]"
   );
   console.log("    deno run init [-d, --day <day>] [-y, --year <year>]");
 }

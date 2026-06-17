@@ -14,6 +14,8 @@ type solution struct {
 	ans1, ans2 int
 }
 
+type m map[byte]int
+
 func buildSolution(r io.Reader) *solution {
 	lines, _ := utils.LinesFromReader(r)
 	return &solution{
@@ -23,59 +25,58 @@ func buildSolution(r io.Reader) *solution {
 	}
 }
 
-func score(r rune) int {
-	if r >= 'a' {
-		return int(r - 'a' + 1)
+func getFre(l string) rune {
+	fre := m{}
+	for i := 0; i < len(l)/2; i++ {
+		fre[l[i]]++
 	}
-	return int(r - 'A' + 27)
-}
-
-func (s *solution) run1() {
-	m := [128]int{}
-	for _, ruck := range s.input {
-		half := len(ruck) / 2
-		for i, r := range ruck {
-			if i < half { // first harf
-				m[r]++ // track freq
-			} else {
-				if m[r] > 0 {
-					s.ans1 += score(r)
-					m = [128]int{}
-					break
-				}
-			}
-		}
-	}
-}
-
-func (s *solution) findCommon(i int) rune {
-	var m [128]int
-	for j := range 3 {
-		var local [128]int
-		for _, r := range s.input[i+j] {
-			if local[r] > 0 {
-				continue
-			}
-			local[r]++
-			m[r]++
-		}
-		// for i, v := range local {
-		// 	if v > 0 {
-		// 		m[i]++
-		// 	}
-		// }
-	}
-	for i, v := range m {
-		if v == 3 {
-			return rune(i)
+	for j := len(l) / 2; j < len(l); j++ {
+		if fre[l[j]] != 0 {
+			return rune(l[j])
 		}
 	}
 	return 0
 }
 
+func getFre2(a, b, c string) rune {
+	fre := make(map[rune]int)
+	com := make(map[rune]int)
+
+	for _, r := range a {
+		fre[r]++
+	}
+
+	for _, r := range b {
+		if fre[r] != 0 {
+			com[r]++
+		}
+	}
+	for _, r := range c {
+		if com[r] != 0 {
+			return r
+		}
+	}
+	return 0
+}
+
+func getPrio(r rune) int {
+	if r > 'Z' {
+		return int(r-'a') + 1
+	}
+	return int(r-'A') + 27
+}
+
 func (s *solution) run2() {
 	for i := 0; i < len(s.input); i += 3 {
-		s.ans2 += score(s.findCommon(i))
+		fre := getFre2(s.input[i], s.input[i+1], s.input[i+2])
+		s.ans2 += getPrio(fre)
+	}
+}
+
+func (s *solution) run1() {
+	for _, line := range s.input {
+		fre := getFre(line)
+		s.ans1 += getPrio(fre)
 	}
 }
 

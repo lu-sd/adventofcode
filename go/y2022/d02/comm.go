@@ -37,7 +37,7 @@ func score(r round) int {
 	case winFunc(r):
 		point += 6
 	}
-	return point + r.p2 + 1
+	return point + r.p2 + 1 // so there is 1 offset, need + 1
 }
 
 func myChose(p1, p2 int) int {
@@ -74,9 +74,12 @@ func parser2(s string) round {
 }
 
 func parser(s string) round {
+	// this return X:0
 	return round{int(s[0] - 'A'), int(s[2] - 'X')}
+
 	// list := strings.Split(s, " ")
 	// p1, p2 := list[0], list[1]
 	//
 	// return round{m[p1], m[p2]}
+	// this is return m X:1
 }

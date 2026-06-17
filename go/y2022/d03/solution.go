@@ -6,8 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"sort"
-	"strconv"
 	"time"
 )
 
@@ -15,6 +13,8 @@ type solution struct {
 	input      []string
 	ans1, ans2 int
 }
+
+type m map[byte]int
 
 func buildSolution(r io.Reader) *solution {
 	lines, _ := utils.LinesFromReader(r)
@@ -25,44 +25,59 @@ func buildSolution(r io.Reader) *solution {
 	}
 }
 
-func (s *solution) run1() {
-	var (
-		res []int
-		sum int
-	)
-	for _, item := range s.input {
-		if item == "" {
-			res = append(res, sum)
-			sum = 0
+func getFre(l string) rune {
+	fre := m{}
+	for i := 0; i < len(l)/2; i++ {
+		fre[l[i]]++
+	}
+	for j := len(l) / 2; j < len(l); j++ {
+		if fre[l[j]] != 0 {
+			return rune(l[j])
 		}
-		int, _ := strconv.Atoi(item)
-		sum += int
 	}
-	res = append(res, sum)
-	sort.Ints(res)
+	return 0
+}
 
-	s.ans1 = res[len(res)-1]
+func getFre2(a, b, c string) rune {
+	fre := make(map[rune]int)
+	com := make(map[rune]int)
 
-	for i := range 3 {
-		s.ans2 += res[len(res)-i-1]
+	for _, r := range a {
+		fre[r]++
 	}
 
-	// fmt.Printf("%#v\n", s.input)
-	// var (
-	// 	sum int
-	// )
-	// for _, item := range s.input {
-	// 	i, _ := strconv.Atoi(item)
-	// 	sum += i
-	// 	if i == 0 {
-	// 		s.ans1 = max(sum, s.ans1)
-	// 		sum = 0
-	// 	}
-	// }
+	for _, r := range b {
+		if fre[r] != 0 {
+			com[r]++
+		}
+	}
+	for _, r := range c {
+		if com[r] != 0 {
+			return r
+		}
+	}
+	return 0
+}
+
+func getPrio(r rune) int {
+	if r > 'Z' {
+		return int(r-'a') + 1
+	}
+	return int(r-'A') + 27
 }
 
 func (s *solution) run2() {
-	s.run1()
+	for i := 0; i < len(s.input); i += 3 {
+		fre := getFre2(s.input[i], s.input[i+1], s.input[i+2])
+		s.ans2 += getPrio(fre)
+	}
+}
+
+func (s *solution) run1() {
+	for _, line := range s.input {
+		fre := getFre(line)
+		s.ans1 += getPrio(fre)
+	}
 }
 
 func (s *solution) res1() int {

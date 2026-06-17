@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-var t1, t2 = 24000, 45000
+var t1, t2 = 157, 70
 
 func TestPart1(t *testing.T) {
 	testInput, err := os.Open("test1.txt")

@@ -19,6 +19,13 @@ func ByteSFromReader(r io.Reader) ([]byte, error) {
 	return bytes.TrimSpace(line), nil
 }
 
+func IsDigit(r rune) (int, bool) {
+	if r >= '0' && r <= '9' {
+		return int(r - '0'), true
+	}
+	return 0, false
+}
+
 // LinesFromReader return list of lines
 func LinesFromReader(r io.Reader) ([]string, error) {
 	var lines []string

@@ -6,8 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"sort"
-	"strconv"
+	"strings"
 	"time"
 )
 
@@ -25,44 +24,58 @@ func buildSolution(r io.Reader) *solution {
 	}
 }
 
-func (s *solution) run1() {
-	var (
-		res []int
-		sum int
-	)
-	for _, item := range s.input {
-		if item == "" {
-			res = append(res, sum)
-			sum = 0
+var m = [...]string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
+
+func findLnR2(l string) (fst, lst int) {
+	fst, lst = -1, -1
+
+	for i := 0; i < len(l); i++ {
+
+		if v, ok := utils.IsDigit(rune(l[i])); ok {
+			if fst == -1 {
+				fst = v
+			}
+			lst = v
 		}
-		int, _ := strconv.Atoi(item)
-		sum += int
+
+		for j, v := range m {
+			if strings.HasSuffix(l[:i+1], v) {
+				if fst == -1 {
+					fst = j + 1
+				}
+				lst = j + 1
+			}
+		}
 	}
-	res = append(res, sum)
-	sort.Ints(res)
+	return
+}
 
-	s.ans1 = res[len(res)-1]
-
-	for i := range 3 {
-		s.ans2 += res[len(res)-i-1]
+func findLnR(l string) (fst, lst int) {
+	fst, lst = -1, -1
+	for _, r := range l {
+		if v, ok := utils.IsDigit(r); ok {
+			if fst == -1 {
+				fst = v
+			}
+			lst = v
+		}
 	}
+	return
+}
 
-	// fmt.Printf("%#v\n", s.input)
-	// var (
-	// 	sum int
-	// )
-	// for _, item := range s.input {
-	// 	i, _ := strconv.Atoi(item)
-	// 	sum += i
-	// 	if i == 0 {
-	// 		s.ans1 = max(sum, s.ans1)
-	// 		sum = 0
-	// 	}
-	// }
+func (s *solution) run1() {
+	for _, line := range s.input {
+		left, right := findLnR(line)
+		s.ans1 += left*10 + right
+
+	}
 }
 
 func (s *solution) run2() {
-	s.run1()
+	for _, line := range s.input {
+		left, right := findLnR2(line)
+		s.ans2 += left*10 + right
+	}
 }
 
 func (s *solution) res1() int {

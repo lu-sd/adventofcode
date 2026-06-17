@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-var t1, t2 = 24000, 45000
+var t1, t2 = 142, 281
 
 func TestPart1(t *testing.T) {
 	testInput, err := os.Open("test1.txt")
@@ -25,7 +25,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	testInput, err := os.Open("test1.txt")
+	testInput, err := os.Open("test2.txt")
 	if err != nil {
 		log.Fatalf("fail open test1.txt %v", err)
 	}

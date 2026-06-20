@@ -1,5 +1,4 @@
-// Package utils helper func for adoc
-package utils
+package h
 
 import "strings"
 
@@ -49,6 +48,17 @@ func (p Pt) Dist(p2 Pt) (dr, dc int) {
 	dc = p.C - p2.C
 	dr = p.R - p2.R
 	return dr, dc
+}
+
+var Dir8 = []Pt{
+	{R: -1, C: 0},
+	{R: 0, C: 1},
+	{R: 1, C: 0},
+	{R: 0, C: -1},
+	{R: -1, C: 1},
+	{R: -1, C: -1},
+	{R: 1, C: -1},
+	{R: 1, C: 1},
 }
 
 var Dir4 = []Pt{

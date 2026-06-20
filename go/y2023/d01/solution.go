@@ -1,7 +1,7 @@
 package main
 
 import (
-	"adventofcode/utils"
+	"adventofcode/h"
 	"fmt"
 	"io"
 	"log"
@@ -16,7 +16,7 @@ type solution struct {
 }
 
 func buildSolution(r io.Reader) *solution {
-	lines, _ := utils.LinesFromReader(r)
+	lines, _ := h.LinesFromReader(r)
 	return &solution{
 		input: lines,
 		ans1:  0,
@@ -31,7 +31,7 @@ func findLnR2(l string) (fst, lst int) {
 
 	for i := 0; i < len(l); i++ {
 
-		if v, ok := utils.IsDigit(rune(l[i])); ok {
+		if v, ok := h.IsDigit(rune(l[i])); ok {
 			if fst == -1 {
 				fst = v
 			}
@@ -53,7 +53,7 @@ func findLnR2(l string) (fst, lst int) {
 func findLnR(l string) (fst, lst int) {
 	fst, lst = -1, -1
 	for _, r := range l {
-		if v, ok := utils.IsDigit(r); ok {
+		if v, ok := h.IsDigit(r); ok {
 			if fst == -1 {
 				fst = v
 			}

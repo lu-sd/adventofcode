@@ -1,4 +1,4 @@
-package utils
+package h
 
 // IntsFromString returns a slice of integers in str, where these numbers are
 // separated by non-number runes. If a dash preceding a number is the only

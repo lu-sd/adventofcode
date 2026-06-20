@@ -1,4 +1,4 @@
-package utils
+package h
 
 import (
 	"bufio"
@@ -19,7 +19,23 @@ func ByteSFromReader(r io.Reader) ([]byte, error) {
 	return bytes.TrimSpace(line), nil
 }
 
-func IsDigit(r rune) (int, bool) {
+func IsDigitBool(v any) bool {
+	_, ok := IsDigit(v)
+	return ok
+}
+
+func IsDigit(v any) (int, bool) {
+	var r rune
+
+	switch x := v.(type) {
+	case rune:
+		r = x
+	case byte:
+		r = rune(x)
+	default:
+		return 0, false
+	}
+
 	if r >= '0' && r <= '9' {
 		return int(r - '0'), true
 	}

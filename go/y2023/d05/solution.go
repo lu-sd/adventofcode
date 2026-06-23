@@ -76,14 +76,27 @@ func (s *solution) run1() {
 
 func (s *solution) run2() {
 	s.ans2 = 1<<32 - 1
+	c := make(chan int)
 	seeds, relations := parse(s.input)
-	seeds = dealSeeds(seeds)
-	for _, seed := range seeds {
+	for i := 0; i < len(seeds); i = i + 2 {
+		go curLoop(seeds, i, relations, c)
+	}
+
+	for i := 0; i < len(seeds); i = i + 2 {
+		s.ans2 = min(s.ans2, <-c)
+	}
+}
+
+func curLoop(seeds []int, i int, relations [][]R, c chan<- int) {
+	maxV := 1<<32 - 1
+	for j := 0; j < seeds[i+1]; j++ {
+		seed := seeds[i] + j
 		for _, relation := range relations {
 			seed = findDst(seed, relation)
 		}
-		s.ans2 = min(seed, s.ans2)
+		maxV = min(maxV, seed)
 	}
+	c <- maxV
 }
 
 func dealSeeds(s []int) (seeds []int) {

@@ -56,13 +56,10 @@ func navigate(lines []string) (ins string, nodes map[string]Node) {
 //		node[key] = Node{left, right}
 //		return node
 //	}
-func (s *solution) run1() {
-	ins, nodes := navigate(s.input)
-	start := "AAA"
-	end := "ZZZ"
-	current := start
+func stepToZ(current, ins string, nodes map[string]Node, condition func(cur string) bool) int {
+	step := 0
 
-	for current != end {
+	for condition(current) {
 		for _, c := range ins {
 			node := nodes[current]
 			if c == 'L' {
@@ -70,51 +67,68 @@ func (s *solution) run1() {
 			} else {
 				current = node.right
 			}
-			s.ans1++
-			if current == end {
-				break
-			}
+			step++
 		}
 	}
+	return step
+}
+
+func (s *solution) run1() {
+	ins, nodes := navigate(s.input)
+	// start := "AAA"
+	// end := "ZZZ"
+	// current := start
+	//
+	// for current != end {
+	// 	for _, c := range ins {
+	// 		node := nodes[current]
+	// 		if c == 'L' {
+	// 			current = node.left
+	// 		} else {
+	// 			current = node.right
+	// 		}
+	// 		s.ans1++
+	// 	}
+	// }
+	s.ans1 = stepToZ("AAA", ins, nodes, validA)
 }
 
 func (s *solution) run2() {
 	ins, nodes := navigate(s.input)
 
-	var currents []string
+	var starts []string
 	for key := range nodes {
 		if strings.HasSuffix(key, "A") {
-			currents = append(currents, key)
+			starts = append(starts, key)
 		}
 	}
-
-	for {
-		for _, c := range ins {
-			for i, curr := range currents {
-				node := nodes[curr]
-
-				if c == 'L' {
-					currents[i] = node.left
-				} else {
-					currents[i] = node.right
-				}
-			}
-
-			s.ans2++
-
-			allEndWithZ := true
-			for _, cur := range currents {
-				if !strings.HasSuffix(cur, "Z") {
-					allEndWithZ = false
-					break
-				}
-			}
-
-			if allEndWithZ {
-				return
-			}
+	for _, start := range starts {
+		step := stepToZ(start, ins, nodes, validB)
+		if s.ans2 == 0 {
+			s.ans2 = step
+		} else {
+			s.ans2 = lcm(s.ans2, step)
 		}
 	}
+}
+
+func validB(start string) bool {
+	return !strings.HasSuffix(start, "Z")
+}
+
+func validA(start string) bool {
+	return start != "ZZZ"
+}
+
+func gcd(a, b int) int {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+func lcm(a, b int) int {
+	return a * b / gcd(a, b)
 }
 
 func (s *solution) res1() int {
